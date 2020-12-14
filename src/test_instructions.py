@@ -9,3 +9,4 @@ def test_instruction_create():
     assert instruction.a_mode() == Mode.IMMEDIATE
     assert instruction.a_value() == 1
     assert instruction.b_mode() == Mode.B_INDIRECT
+    assert instruction.b_value() == -1

@@ -4,10 +4,10 @@ from src.modifier import Modifier
 
 class Instruction:
     def __init__(self, modifier, a_mode, a_value, b_mode, b_value):
-        self._modifier = Modifier(modifier)
-        self._a_mode = Mode(a_mode)
+        self._modifier = Modifier(modifier) if modifier is not None else Modifier.AB
+        self._a_mode = Mode(a_mode) if a_mode is not None else Mode.DIRECT
         self._a_value = a_value
-        self._b_mode = Mode(b_mode)
+        self._b_mode = Mode(b_mode) if b_mode is not None else Mode.DIRECT
         self._b_value = b_value
 
     def modifier(self):
@@ -24,3 +24,19 @@ class Instruction:
 
     def b_value(self):
         return self._b_value
+
+
+class DAT(Instruction):
+    pass
+
+
+class MOV(Instruction):
+    pass
+
+
+class ArithmeticInstruction(Instruction):
+    pass
+
+
+class ADD(ArithmeticInstruction):
+    pass
