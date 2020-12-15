@@ -1,7 +1,12 @@
 class Warrior:
-    def __init__(self, instructions):
-        self._instructions = instructions
-        self._processes = []
+    def __init__(self, instructions=None, processes=None):
+        """
+
+        :param instructions: Warrior instruction list; Optional to simplify testing
+        :param processes: Init warrior with queued processes for testing purposes
+        """
+        self._instructions = instructions if instructions else []
+        self._processes = processes if processes else []
 
     def instructions(self):
         return self._instructions

@@ -4,10 +4,18 @@ from src.core import Core
 
 
 class Game:
-    def __init__(self, warriors=None, core=None, core_size=200):
-        self._core = core if Core else Core(core_size)
-        self._warriors = warriors if warriors else []
-        self.init_warriors()
+    def __init__(self, warriors, core=None, core_size=200, init_warriors=True):
+        """
+
+        :param warriors: Required warriors list
+        :param core: Optional core for testing purposes
+        :param core_size: Other core size than default
+        :param init_warriors: Execute init_warriors() for testing purposes
+        """
+        self._core = core if core else Core(core_size)
+        self._warriors = warriors
+        if init_warriors:
+            self.init_warriors()
 
     def core(self):
         return self._core
