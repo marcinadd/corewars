@@ -22,14 +22,15 @@ class Core:
 
     def get_core_address_mode_value(self, mode, value, instruction_pos):
         if mode == Mode.IMMEDIATE:
-            # Reading value from core isn't necessary
-            return value
+            # Pointer is 0
+            return 0
+        pos = self.get_value_mod_core_size(value)
         if mode == Mode.DIRECT:
-            # Return position
-            return self.get_value_mod_core_size(instruction_pos + value)
+            # Direct pointer to current pos
+            return pos
         elif mode == Mode.A_INDIRECT:
             position = self.get_value_mod_core_size(instruction_pos + value)
-            return self._data[position].a_value()
+            return self._data[position].a_value() + pos
         elif mode == Mode.B_INDIRECT:
             position = self.get_value_mod_core_size(instruction_pos + value)
-            return self._data[position].b_value()
+            return self._data[position].b_value() + pos
