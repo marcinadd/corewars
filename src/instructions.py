@@ -6,6 +6,14 @@ from src.modifier import Modifier
 
 class Instruction:
     def __init__(self, modifier, a_mode, a_value, b_mode, b_value):
+        """
+        Instruction constructor
+        :param modifier: String modifier; for example "AB"
+        :param a_mode: String a_mode; for example "#"
+        :param a_value: String a_value; for example "-1"
+        :param b_mode: String b_mode; for example "#"
+        :param b_value: String b_value; for example "-1"
+        """
         self._modifier = Modifier(modifier) if modifier else Modifier.AB
         self._a_mode = Mode(a_mode) if a_mode else Mode.DIRECT
         self._a_value = int(a_value) if a_value else 0
@@ -34,6 +42,12 @@ class Instruction:
         self._b_value = b_value
 
     def execute(self, core, position, warrior):
+        """
+        Executes instruction in core
+        :param core: Core object
+        :param position: Instruction position in core addressing mode
+        :param warrior: Warrior object to queue next task
+        """
         a_pointer = core.get_core_address_mode_value(self._a_mode, self._a_value, position)
         b_pointer = core.get_core_address_mode_value(self._b_mode, self._b_value, position)
         a = copy(core[a_pointer + position])
@@ -44,6 +58,17 @@ class Instruction:
     #     TODO Post dec/post inc here
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        """
+        Instruction to override in subclasses
+        :param a: A instruction
+        :param b: B instruction
+        :param a_pointer: A instruction pointer relative to position
+        :param b_pointer: B instruction pointer relative to position
+        :param position: Position of current instruction in core
+        :param core: Core object
+        :param warrior: Warrior object to queue next task
+        :return:
+        """
         # Override when extending
         pass
 
@@ -62,6 +87,10 @@ class DAT(Instruction):
 
 
 class MOV(Instruction):
+    """
+    Move (copies data from one address to another)
+    """
+
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         modify_position = position + b_pointer
         if self._modifier == Modifier.I:
@@ -71,10 +100,21 @@ class MOV(Instruction):
 
 
 def evaluate_expression(a, operator, b):
+    """
+    Evaluate mathematical expression; for example 2 / 3
+    :param a: A value
+    :param operator: Operator '+' '-' '*' '/' '%'
+    :param b: B value
+    :return: Result of A op B
+    """
     return eval(str(a) + operator + str(b))
 
 
 class ArithmeticInstruction(Instruction):
+    """
+    Base class for arithmetic expressions
+    """
+
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         modify_position = position + b_pointer
         instruction_to_modify = core[modify_position]
@@ -91,10 +131,18 @@ class ArithmeticInstruction(Instruction):
 
 
 class ADD(ArithmeticInstruction):
+    """
+    Add (adds one number to another)
+    """
+
     def get_operator(self):
         return '+'
 
 
 class JMP(Instruction):
+    """
+    Jump (continues execution from another address)
+    """
+
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         warrior.add_process(position + a_pointer)

@@ -18,6 +18,11 @@ INSTRUCTION_PATTERN = re.compile(r'^([A-Z]{3})'  # INSTRUCTION
 
 
 def parse_warrior(file_handle):
+    """
+    Parses warrior instructions from file_handle
+    :param file_handle: file_handle stream
+    :return: warrior object
+    """
     instructions = []
     for line in file_handle:
         line = line.strip().upper()

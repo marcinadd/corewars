@@ -12,6 +12,10 @@ class Warrior:
         return self._instructions
 
     def add_process(self, position):
+        """
+        Adds process to warrior processes queue list
+        :param position:int: Address in core
+        """
         self._processes.append(position)
 
     def processes(self):
