@@ -28,15 +28,17 @@ def parse_warrior(file_handle):
         line = line.strip().upper()
         if line:
             match = re.search(INSTRUCTION_PATTERN, line)
-            instruction_code, modifier, a_mode, a_value, b_mode, b_value = match.groups()
+            groups = list(match.groups())
+            instruction_code = groups[0]
+            instruction_values = groups[1:]
             if instruction_code == "DAT":
-                instruction = DAT(modifier, a_mode, a_value, b_mode, b_value)
+                instruction = DAT(*instruction_values)
             elif instruction_code == "MOV":
-                instruction = MOV(modifier, a_mode, a_value, b_mode, b_value)
+                instruction = MOV(*instruction_values)
             elif instruction_code == "ADD":
-                instruction = ADD(modifier, a_mode, a_value, b_mode, b_value)
+                instruction = ADD(*instruction_values)
             elif instruction_code == "JMP":
-                instruction = JMP(modifier, a_mode, a_value, b_mode, b_value)
+                instruction = JMP(*instruction_values)
             else:
                 raise InvalidInstructionException(instruction_code)
             instructions.append(instruction)
