@@ -75,8 +75,21 @@ def evaluate_expression(a, operator, b):
 
 
 class ArithmeticInstruction(Instruction):
-    pass
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        modify_position = position + b_pointer
+        instruction_to_modify = core[modify_position]
+        operator = self.get_operator()
+        if self._modifier == Modifier.AB:
+            expression_result = evaluate_expression(b.b_value(), operator, a.a_value())
+            instruction_to_modify.set_b_value(expression_result)
+
+        warrior.add_process(position + 1)
+
+    def get_operator(self):
+        # Implemented in extending classes
+        pass
 
 
 class ADD(ArithmeticInstruction):
-    pass
+    def get_operator(self):
+        return '+'

@@ -27,3 +27,11 @@ def test_mov_typical():
     game.simulation_step()
     assert game.core()[2].a_value() == 1
     assert game.core()[2].b_value() == 2
+
+
+def test_add_typical():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[ADD('AB', '#', '3', '$', '1'), DAT('F', '$', 1, '$', -5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[1].b_value() == -2
