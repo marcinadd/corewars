@@ -1,4 +1,5 @@
 from copy import copy
+from enum import Enum
 
 from src.mode import Mode
 from src.modifier import Modifier
@@ -83,6 +84,9 @@ class Instruction:
 
 
 class DAT(Instruction):
+    """
+    Data (kills the process)
+    """
     pass
 
 
@@ -99,15 +103,23 @@ class MOV(Instruction):
         warrior.add_process(position + 1)
 
 
+class ArithmeticOperator(Enum):
+    ADD = '+'
+    SUBTRACT = '-'
+    MULTIPLY = '*'
+    DIVIDE = '/'
+    MODULO = '%'
+
+
 def evaluate_expression(a, operator, b):
     """
     Evaluate mathematical expression; for example 2 / 3
     :param a: A value
-    :param operator: Operator '+' '-' '*' '/' '%'
+    :param operator: ArithmeticOperator
     :param b: B value
     :return: Result of A op B
     """
-    return eval(str(a) + operator + str(b))
+    return eval(str(a) + operator.value + str(b))
 
 
 class ArithmeticInstruction(Instruction):
@@ -127,7 +139,7 @@ class ArithmeticInstruction(Instruction):
 
     def get_operator(self):
         # Implemented in extending classes
-        pass
+        return ArithmeticOperator.ADD  # Set default to fix linter errors
 
 
 class ADD(ArithmeticInstruction):
@@ -136,7 +148,16 @@ class ADD(ArithmeticInstruction):
     """
 
     def get_operator(self):
-        return '+'
+        return ArithmeticOperator.ADD
+
+
+class SUB(ArithmeticInstruction):
+    """
+    Subtract (subtracts one number from another)
+    """
+
+    def get_operator(self):
+        return ArithmeticOperator.SUBTRACT
 
 
 class JMP(Instruction):
