@@ -18,7 +18,9 @@ class Core:
         self._data[key] = value
 
     def get_value_mod_core_size(self, value):
-        return value % self._size
+        # FIXME Add instruction address looping
+        return value
+        # return value % self._size
 
     def get_core_address_mode_value(self, mode, value, instruction_pos):
         if mode == Mode.IMMEDIATE:

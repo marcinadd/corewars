@@ -20,6 +20,9 @@ class Game:
     def core(self):
         return self._core
 
+    def warriors(self):
+        return self._warriors
+
     def _init_warrior(self, warrior, starting_core_address):
         self._core[starting_core_address] = copy.copy(warrior.instructions())
         for offset, instruction in enumerate(warrior.instructions()):

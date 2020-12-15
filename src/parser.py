@@ -30,6 +30,8 @@ def parse_warrior(file_handle):
                 instruction = MOV(modifier, a_mode, a_value, b_mode, b_value)
             elif instruction_code == "ADD":
                 instruction = ADD(modifier, a_mode, a_value, b_mode, b_value)
+            elif instruction_code == "JMP":
+                instruction = JMP(modifier, a_mode, a_value, b_mode, b_value)
             else:
                 raise InvalidInstructionException(instruction_code)
             instructions.append(instruction)

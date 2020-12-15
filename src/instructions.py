@@ -93,3 +93,8 @@ class ArithmeticInstruction(Instruction):
 class ADD(ArithmeticInstruction):
     def get_operator(self):
         return '+'
+
+
+class JMP(Instruction):
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        warrior.add_process(position + a_pointer)

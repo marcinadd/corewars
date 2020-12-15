@@ -1,6 +1,6 @@
 from src.core import Core
 from src.game import Game
-from src.instructions import Instruction, DAT, MOV, ADD
+from src.instructions import Instruction, DAT, MOV, ADD, JMP
 from src.mode import Mode
 from src.modifier import Modifier
 from src.warrior import Warrior
@@ -35,3 +35,11 @@ def test_add_typical():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert game.core()[1].b_value() == -2
+
+
+def test_jmp_typical():
+    warrior = Warrior(processes=[2])
+    core = Core(data=[DAT('F', '$', 1, '$', -5), DAT('F', '$', 1, '$', -5), JMP('B', '$', -1, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.warriors()[0].processes()[0] == 1
