@@ -7,9 +7,9 @@ def prepare_core(size):
 
 
 class Core:
-    def __init__(self, size=250):
-        self._size = size
-        self._data = prepare_core(size)
+    def __init__(self, size=250, data=None):
+        self._size = size if not data else len(data)
+        self._data = data if data else prepare_core(size)
 
     def __getitem__(self, item):
         return self._data[item]

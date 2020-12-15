@@ -41,7 +41,7 @@ class Instruction:
 
         self.instruction(a, b, a_pointer, b_pointer, position, core, warrior)
 
-    #     TODO Post dec post inc here
+    #     TODO Post dec/post inc here
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         # Override when extending
@@ -62,7 +62,16 @@ class DAT(Instruction):
 
 
 class MOV(Instruction):
-    pass
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        modify_position = position + b_pointer
+        if self._modifier == Modifier.I:
+            core[modify_position] = a
+
+        warrior.add_process(position + 1)
+
+
+def evaluate_expression(a, operator, b):
+    return eval(str(a) + operator + str(b))
 
 
 class ArithmeticInstruction(Instruction):
