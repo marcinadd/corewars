@@ -1,8 +1,8 @@
 from copy import copy
 from enum import Enum
 
-from src.mode import Mode
-from src.modifier import Modifier
+from src.enum.mode import Mode
+from src.enum.modifier import Modifier
 
 
 class Instruction:

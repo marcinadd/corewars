@@ -1,5 +1,5 @@
+from src.enum.mode import Mode
 from src.instructions import DAT
-from src.mode import Mode
 
 
 def prepare_core(size):

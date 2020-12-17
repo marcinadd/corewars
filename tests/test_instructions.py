@@ -1,8 +1,8 @@
 from src.core import Core
+from src.enum.mode import Mode
+from src.enum.modifier import Modifier
 from src.game import Game
 from src.instructions import Instruction, DAT, MOV, ADD, JMP, SUB
-from src.mode import Mode
-from src.modifier import Modifier
 from src.warrior import Warrior
 
 
