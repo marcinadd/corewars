@@ -51,3 +51,35 @@ def test_jmp_typical():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert game.warriors()[0].processes()[0] == 1
+
+
+def test_core_add_cycle_end():
+    warrior = Warrior(processes=[1])
+    core = Core(data=[DAT('F', '$', 1, '$', 5), ADD('AB', '#', '3', '$', '2'), DAT('F', '$', 1, '$', -5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[0].b_value() == 8
+
+
+def test_core_add_cycle_end_two_times():
+    warrior = Warrior(processes=[1])
+    core = Core(data=[DAT('F', '$', 1, '$', 5), ADD('AB', '#', '3', '$', '5'), DAT('F', '$', 1, '$', -5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[0].b_value() == 8
+
+
+def test_core_add_cycle_begin():
+    warrior = Warrior(processes=[1])
+    core = Core(data=[DAT('F', '$', 1, '$', 5), ADD('AB', '#', '3', '$', '-2'), DAT('F', '$', 1, '$', -5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].b_value() == -2
+
+
+def test_core_add_cycle_begin_two_times():
+    warrior = Warrior(processes=[1])
+    core = Core(data=[DAT('F', '$', 1, '$', 5), ADD('AB', '#', '3', '$', '-5'), DAT('F', '$', 1, '$', -5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].b_value() == -2

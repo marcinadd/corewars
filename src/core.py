@@ -21,10 +21,12 @@ class Core:
         self._data = data if data else prepare_core(size)
 
     def __getitem__(self, item):
-        return self._data[item]
+        address = self.get_address_mod_core_size(item)
+        return self._data[address]
 
     def __setitem__(self, key, value):
-        self._data[key] = value
+        address = self.get_address_mod_core_size(key)
+        self._data[address] = value
 
     def get_address_mod_core_size(self, address):
         """
@@ -32,8 +34,7 @@ class Core:
         :param address: 
         :return: Address which fit in core
         """
-        # FIXME Add instruction address looping
-        return address
+        return address % self._size
 
     def get_core_address_mode_value(self, mode, value, instruction_pos):
         """
@@ -46,13 +47,12 @@ class Core:
         if mode == Mode.IMMEDIATE:
             # Pointer is 0
             return 0
-        pos = self.get_address_mod_core_size(value)
         if mode == Mode.DIRECT:
             # Instruction address to current position
-            return pos
+            return value
         elif mode == Mode.A_INDIRECT:
-            position = self.get_address_mod_core_size(instruction_pos + value)
-            return self._data[position].a_value() + pos
+            position = instruction_pos + value
+            return self._data[position].a_value() + value
         elif mode == Mode.B_INDIRECT:
-            position = self.get_address_mod_core_size(instruction_pos + value)
-            return self._data[position].b_value() + pos
+            position = instruction_pos + value
+            return self._data[position].b_value() + value

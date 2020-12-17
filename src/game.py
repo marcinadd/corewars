@@ -42,6 +42,16 @@ class Game:
             # TODO Randomize warrior location here
             self._init_warrior(warrior, 0)
 
+    def has_alive_warriors(self):
+        """
+        Check if game as any alive warrior
+        :return: True if is any alive warrior else false
+        """
+        for warrior in self._warriors:
+            if warrior.processes():
+                return True
+        return False
+
     def simulation_step(self):
         """
         Iterates all warriors and execute one queued instruction for each warrior

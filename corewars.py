@@ -16,9 +16,9 @@ def main():
     # Parse warrior
     warrior = parse_warrior(file_handle)
     # Init game
-    game = Game([warrior], core_size=200)
+    game = Game([warrior], core_size=9)
     # Simulate
-    while True:
+    while game.has_alive_warriors():
         # TODO Check if there is any alive warrior process
         game.simulation_step()
 
