@@ -2,7 +2,7 @@ from src.core import Core
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 from src.game import Game
-from src.instructions import Instruction, DAT, MOV, ADD, JMP, SUB
+from src.instructions import Instruction, DAT, MOV, ADD, JMP, SUB, SPL
 from src.warrior import Warrior
 
 
@@ -115,3 +115,11 @@ def test_core_postincrement_b():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert game.core()[1].b_value() == 1
+
+
+def test_spl_typical():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SPL('F', '$', 2, '$', 2), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1, 2]

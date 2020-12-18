@@ -16,6 +16,14 @@ INSTRUCTION_PATTERN = re.compile(r'^([A-Z]{3})'  # INSTRUCTION
                                  r'(?:\s*;.*)?$'  # Non capturing optional comment
                                  )
 
+INSTRUCTION_CODES = {
+    "DAT": DAT,
+    "MOV": MOV,
+    "ADD": ADD,
+    "JMP": JMP,
+    "SPL": SPL
+}
+
 
 def parse_warrior(file_handle):
     """
@@ -31,15 +39,10 @@ def parse_warrior(file_handle):
             groups = list(match.groups())
             instruction_code = groups[0]
             instruction_values = groups[1:]
-            if instruction_code == "DAT":
-                instruction = DAT(*instruction_values)
-            elif instruction_code == "MOV":
-                instruction = MOV(*instruction_values)
-            elif instruction_code == "ADD":
-                instruction = ADD(*instruction_values)
-            elif instruction_code == "JMP":
-                instruction = JMP(*instruction_values)
+            if instruction_code in INSTRUCTION_CODES:
+                instruction_class = INSTRUCTION_CODES[instruction_code]
+                instruction = instruction_class(*instruction_values)
+                instructions.append(instruction)
             else:
                 raise InvalidInstructionException(instruction_code)
-            instructions.append(instruction)
     return Warrior(instructions)

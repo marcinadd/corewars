@@ -172,3 +172,13 @@ class JMP(Instruction):
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         warrior.add_process(position + a_pointer)
+
+
+class SPL(Instruction):
+    """
+    Split (starts a second process at another address)
+    """
+
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        warrior.add_process(position + 1)
+        warrior.add_process(position + a_pointer)
