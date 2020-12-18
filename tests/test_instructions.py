@@ -2,12 +2,12 @@ from src.core import Core
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 from src.game import Game
-from src.instructions import Instruction, DAT, MOV, ADD, JMP, SUB, SPL
+from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL
 from src.warrior import Warrior
 
 
 def test_instruction_create():
-    instruction = Instruction('AB', '#', 1, '@', -1)
+    instruction = DAT('AB', '#', 1, '@', -1)
     assert instruction.modifier() == Modifier.AB
     assert instruction.a_mode() == Mode.IMMEDIATE
     assert instruction.a_value() == 1

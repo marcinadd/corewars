@@ -1,3 +1,4 @@
+from abc import abstractmethod, ABC
 from copy import copy
 from enum import Enum
 
@@ -5,7 +6,7 @@ from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 
 
-class Instruction:
+class Instruction(ABC):
     def __init__(self, modifier, a_mode, a_value, b_mode, b_value):
         """
         Instruction constructor
@@ -63,6 +64,7 @@ class Instruction:
 
         self.instruction(a, b, a_pointer, b_pointer, position, core, warrior)
 
+    @abstractmethod
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         """
         Instruction to override in subclasses
@@ -92,7 +94,9 @@ class DAT(Instruction):
     """
     Data (kills the process)
     """
-    pass
+
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        pass
 
 
 class MOV(Instruction):

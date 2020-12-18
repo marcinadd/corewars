@@ -20,6 +20,7 @@ INSTRUCTION_CODES = {
     "DAT": DAT,
     "MOV": MOV,
     "ADD": ADD,
+    "SUB": SUB,
     "JMP": JMP,
     "SPL": SPL
 }
