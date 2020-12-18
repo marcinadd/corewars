@@ -1,7 +1,13 @@
 from io import StringIO
 
+import pygame
+
 from src.game import Game
+from src.gui.gui import PyGameGUI
 from src.parser import *
+
+SCREEN_X = 1024
+SCREEN_Y = 768
 
 
 def main():
@@ -16,11 +22,16 @@ def main():
     # Parse warrior
     warrior = parse_warrior(file_handle)
     # Init game
-    game = Game([warrior], core_size=9)
+    game = Game([warrior], core_size=8000)
+    # Init gui
+    gui = PyGameGUI(SCREEN_X, SCREEN_Y)
+    gui.init_game_screen()
     # Simulate
     while game.has_alive_warriors():
-        # TODO Check if there is any alive warrior process
         game.simulation_step()
+        gui.clock_tick()
+        pygame.display.flip()
+    pygame.quit()
 
 
 if __name__ == '__main__':
