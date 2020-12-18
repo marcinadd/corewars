@@ -120,7 +120,7 @@ class ArithmeticOperator(Enum):
     MODULO = '%'
 
 
-def evaluate_expression(a, operator, b):
+def eval_expression(a, operator, b):
     """
     Evaluate mathematical expression; for example 2 / 3
     :param a: A value
@@ -140,9 +140,20 @@ class ArithmeticInstruction(Instruction):
         modify_position = position + b_pointer
         instruction_to_modify = core[modify_position]
         operator = self.get_operator()
-        if self._modifier == Modifier.AB:
-            expression_result = evaluate_expression(b.b_value(), operator, a.a_value())
-            instruction_to_modify.set_b_value(expression_result)
+        if self._modifier == Modifier.A:
+            instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.a_value()))
+        elif self._modifier == Modifier.B:
+            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.b_value()))
+        elif self._modifier == Modifier.AB:
+            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.a_value()))
+        elif self._modifier == Modifier.BA:
+            instruction_to_modify.set_a_value(eval_expression(b.b_value(), operator, a.a_value()))
+        elif self._modifier in (Modifier.F, Modifier.I):
+            instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.a_value()))
+            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.b_value()))
+        elif self._modifier == Modifier.X:
+            instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.b_value()))
+            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.a_value()))
 
         warrior.add_process(position + 1)
 
