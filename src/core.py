@@ -4,21 +4,22 @@ from src.instructions import DAT
 
 def prepare_core(size):
     """
-    Fills core with values
+    Generate data with single instruction
     :param size: Core size
-    :return:
+    :return: Core data
     """
     return [DAT('F', '$', 0, '$', 0) for _ in range(size)]
 
 
 class Core:
-    def __init__(self, size=250, data=None):
+    def __init__(self, size=250, data=None, gui=None):
         """
         :param size: Optional for custom core size
         :param data: Optional param Use predefined core data; Useful for testing
         """
         self._size = size if not data else len(data)
         self._data = data if data else prepare_core(size)
+        self._gui = gui
 
     def __getitem__(self, item):
         address = self.get_address_mod_core_size(item)
@@ -56,3 +57,8 @@ class Core:
         elif mode == Mode.B_INDIRECT:
             position = instruction_pos + value
             return self._data[position].b_value() + value
+
+    def update_core_gui(self, block_number, warrior):
+        if self._gui:
+            block_number = self.get_address_mod_core_size(block_number)
+            self._gui.set_block_color(block_number, warrior.color())

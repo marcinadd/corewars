@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 import pygame
 
 from src.gui.colors import Color
@@ -15,20 +17,24 @@ class GUI:
         self._blocks_x, self._blocks_y = divide_blocks(core_size)
         self._core_size = core_size
 
-    def init_game_screen(self):
-        pass
-
-    def draw_block(self, number, color):
-        pass
-
     def get_block_position(self, block_number):
         y = block_number // self._blocks_x
         x = block_number % self._blocks_x
         return x, y
 
+    @abstractmethod
+    def init_game_screen(self):
+        pass
+
+    @abstractmethod
+    def set_block_color(self, block_number, color):
+        pass
+
+
+
 
 class PyGameGUI(GUI):
-    def __init__(self, width, height, ticks=30, core_size=8000, block_size=9):
+    def __init__(self, width, height, ticks=250, core_size=8000, block_size=9):
         super().__init__(width, height, core_size)
         pygame.init()
         self._screen = pygame.display.set_mode((width, height))

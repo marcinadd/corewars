@@ -4,7 +4,7 @@ from src.core import Core
 
 
 class Game:
-    def __init__(self, warriors, core=None, core_size=200, init_warriors=True):
+    def __init__(self, warriors, core=None, core_size=200, init_warriors=True, gui=None):
         """
         Game constructor
         :param warriors: Required warriors list
@@ -12,8 +12,11 @@ class Game:
         :param core_size: Other core size than default
         :param init_warriors: Execute init_warriors() for testing purposes
         """
-        self._core = core if core else Core(core_size)
+        self._core = core if core else Core(core_size, gui=gui)
         self._warriors = warriors
+        if gui:
+            self._gui = gui
+            self._gui.init_game_screen()
         if init_warriors:
             self.init_warriors()
 
@@ -31,7 +34,9 @@ class Game:
         """
         self._core[starting_core_address] = copy.copy(warrior.instructions())
         for offset, instruction in enumerate(warrior.instructions()):
-            self._core[starting_core_address + offset] = copy.copy(instruction)
+            address = starting_core_address + offset
+            self._core[address] = copy.copy(instruction)
+            self._core.update_core_gui(address, warrior)
         warrior.add_process(starting_core_address)
 
     def init_warriors(self):

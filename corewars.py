@@ -21,11 +21,11 @@ def main():
     file_handle = StringIO(data)
     # Parse warrior
     warrior = parse_warrior(file_handle)
-    # Init game
-    game = Game([warrior], core_size=8000)
     # Init gui
     gui = PyGameGUI(SCREEN_X, SCREEN_Y)
-    gui.init_game_screen()
+    # Init game
+    game = Game([warrior], core_size=8000, gui=gui)
+
     # Simulate
     while game.has_alive_warriors():
         game.simulation_step()

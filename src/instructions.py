@@ -54,6 +54,9 @@ class Instruction:
         a = copy(core[a_pointer + position])
         b = copy(core[b_pointer + position])
 
+        core.update_core_gui(a_pointer + position, warrior)
+        core.update_core_gui(b_pointer + position, warrior)
+
         self.instruction(a, b, a_pointer, b_pointer, position, core, warrior)
 
     #     TODO Post dec/post inc here
