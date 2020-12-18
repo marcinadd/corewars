@@ -49,13 +49,19 @@ class Core:
             # Pointer is 0
             return 0
         if mode == Mode.DIRECT:
-            # Instruction address to current position
+            # Direct address to current position
             return value
-        elif mode == Mode.A_INDIRECT:
-            position = instruction_pos + value
+
+        position = instruction_pos + value
+        # Predecrement
+        if mode == Mode.A_PRE_DEC_INDIRECT:
+            self[position].set_a_value(self[position].a_value() - 1)
+        elif mode == Mode.B_PRE_DEC_INDIRECT:
+            self[position].set_b_value(self[position].b_value() - 1)
+        # Indirect addressing
+        if mode in (Mode.A_INDIRECT, Mode.A_PRE_DEC_INDIRECT):
             return self[position].a_value() + value
-        elif mode == Mode.B_INDIRECT:
-            position = instruction_pos + value
+        elif mode in (Mode.B_INDIRECT, Mode.B_PRE_DEC_INDIRECT):
             return self[position].b_value()
 
     def update_core_gui(self, block_number, warrior):

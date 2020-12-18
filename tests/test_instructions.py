@@ -83,3 +83,19 @@ def test_core_add_cycle_begin_two_times():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert game.core()[2].b_value() == -2
+
+
+def test_core_predecrement_a():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DAT('F', '{', 1, '$', 1), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[1].a_value() == -1
+
+
+def test_core_predecrement_b():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DAT('F', '<', 1, '$', 1), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[1].b_value() == -1
