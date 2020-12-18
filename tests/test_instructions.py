@@ -99,3 +99,19 @@ def test_core_predecrement_b():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert game.core()[1].b_value() == -1
+
+
+def test_core_postincrement_a():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DAT('F', '}', 1, '$', 1), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[1].a_value() == 1
+
+
+def test_core_postincrement_b():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DAT('F', '>', 1, '$', 1), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[1].b_value() == 1

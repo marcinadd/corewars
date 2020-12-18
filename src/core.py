@@ -1,3 +1,5 @@
+from enum import Enum
+
 from src.enum.mode import Mode
 from src.instructions import DAT
 
@@ -9,6 +11,11 @@ def prepare_core(size):
     :return: Core data
     """
     return [DAT('F', '$', 0, '$', 0) for _ in range(size)]
+
+
+class FieldLetter(Enum):
+    A = 'A'
+    B = 'B'
 
 
 class Core:
@@ -53,16 +60,38 @@ class Core:
             return value
 
         position = instruction_pos + value
-        # Predecrement
-        if mode == Mode.A_PRE_DEC_INDIRECT:
-            self[position].set_a_value(self[position].a_value() - 1)
-        elif mode == Mode.B_PRE_DEC_INDIRECT:
-            self[position].set_b_value(self[position].b_value() - 1)
+        # Predecrement (if necessary)
+        self._check_predecrement(mode, value)
         # Indirect addressing
-        if mode in (Mode.A_INDIRECT, Mode.A_PRE_DEC_INDIRECT):
-            return self[position].a_value() + value
-        elif mode in (Mode.B_INDIRECT, Mode.B_PRE_DEC_INDIRECT):
+        address = 0
+        if mode in (Mode.A_INDIRECT, Mode.A_PRE_DEC_INDIRECT, Mode.A_POST_INC_INDIRECT):
+            return self[position].a_value()
+        elif mode in (Mode.B_INDIRECT, Mode.B_PRE_DEC_INDIRECT, Mode.B_POST_INC_INDIRECT):
             return self[position].b_value()
+
+    def _check_predecrement(self, mode, position):
+        if mode == Mode.A_PRE_DEC_INDIRECT:
+            self._add_value_to_core_instruction_field(position, FieldLetter.A, -1)
+        elif mode == Mode.B_PRE_DEC_INDIRECT:
+            self._add_value_to_core_instruction_field(position, FieldLetter.B, -1)
+
+    def check_postincrement(self, mode, value, instruction_pos):
+        position = instruction_pos + value
+        if mode == Mode.A_POST_INC_INDIRECT:
+            self._add_value_to_core_instruction_field(position, FieldLetter.A, 1)
+        elif mode == Mode.B_POST_INC_INDIRECT:
+            self._add_value_to_core_instruction_field(position, FieldLetter.B, 1)
+
+    def _add_value_to_core_instruction_field(self, position, field_letter, change):
+        instruction = self[position]
+        if field_letter == FieldLetter.A:
+            # Adds change to instruction field A
+            value = instruction.a_value() + change
+            instruction.set_a_value(value)
+        elif field_letter == FieldLetter.B:
+            # Adds change to instruction field B
+            value = instruction.b_value() + change
+            instruction.set_b_value(value)
 
     def update_core_gui(self, block_number, warrior):
         if self._gui:

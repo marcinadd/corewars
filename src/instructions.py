@@ -54,12 +54,14 @@ class Instruction:
         a = copy(core[a_pointer + position])
         b = copy(core[b_pointer + position])
 
+        # Postincrement (if necessary) after copy instruction
+        core.check_postincrement(self._a_mode, self._a_value, position)
+        core.check_postincrement(self._b_mode, self._b_value, position)
+
         core.update_core_gui(a_pointer + position, warrior)
         core.update_core_gui(b_pointer + position, warrior)
 
         self.instruction(a, b, a_pointer, b_pointer, position, core, warrior)
-
-    #     TODO Post dec/post inc here
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         """
