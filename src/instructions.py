@@ -178,6 +178,38 @@ class JMP(Instruction):
         warrior.add_process(position + a_pointer)
 
 
+class JMZ(Instruction):
+    """
+    Jump if zero (tests a number and jumps to an address if it's 0)
+    """
+
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        jump = 1
+        if self._modifier in (Modifier.A, Modifier.BA):
+            jump = a_pointer if a.a_value() == 0 else 1
+        elif self._modifier in (Modifier.B, Modifier.AB):
+            jump = a_pointer if a.b_value() == 0 else 1
+        elif self._modifier in (Modifier.F, Modifier.X, Modifier.I):
+            jump = a_pointer if a.a_value() == 0 and a.b_value() == 0 else 1
+        warrior.add_process(position + jump)
+
+
+class JMN(Instruction):
+    """
+    Jump if not zero (tests a number and jumps if it isn't 0)
+    """
+
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        jump = 1
+        if self._modifier in (Modifier.A, Modifier.BA):
+            jump = a_pointer if a.a_value() != 0 else 1
+        elif self._modifier in (Modifier.B, Modifier.AB):
+            jump = a_pointer if a.b_value() != 0 else 1
+        elif self._modifier in (Modifier.F, Modifier.X, Modifier.I):
+            jump = a_pointer if a.a_value() != 0 or b.b_value() != 0 else 1
+        warrior.add_process(position + jump)
+
+
 class SPL(Instruction):
     """
     Split (starts a second process at another address)

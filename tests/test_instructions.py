@@ -2,7 +2,7 @@ from src.core import Core
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 from src.game import Game
-from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL
+from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN
 from src.warrior import Warrior
 
 
@@ -123,3 +123,99 @@ def test_spl_typical():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert warrior.processes() == [1, 2]
+
+
+def test_jmz_a_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMZ('A', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_jmz_a_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMZ('A', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 1, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_jmz_b_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMZ('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 1, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_jmz_b_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMZ('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_jmz_f_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMZ('F', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_jmz_f_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMZ('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 1), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_jmn_a_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMN('A', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_jmn_a_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMN('A', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 1, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_jmn_b_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMN('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 1, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_jmn_b_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMN('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_jmn_f_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMN('F', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_jmn_f_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[JMN('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 1), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
