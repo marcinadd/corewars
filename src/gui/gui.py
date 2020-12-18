@@ -31,8 +31,6 @@ class GUI:
         pass
 
 
-
-
 class PyGameGUI(GUI):
     def __init__(self, width, height, ticks=250, core_size=8000, block_size=9):
         super().__init__(width, height, core_size)

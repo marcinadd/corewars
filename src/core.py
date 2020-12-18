@@ -53,10 +53,10 @@ class Core:
             return value
         elif mode == Mode.A_INDIRECT:
             position = instruction_pos + value
-            return self._data[position].a_value() + value
+            return self[position].a_value() + value
         elif mode == Mode.B_INDIRECT:
             position = instruction_pos + value
-            return self._data[position].b_value() + value
+            return self[position].b_value()
 
     def update_core_gui(self, block_number, warrior):
         if self._gui:

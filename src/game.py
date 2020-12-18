@@ -45,7 +45,7 @@ class Game:
         """
         for warrior in self._warriors:
             # TODO Randomize warrior location here
-            self._init_warrior(warrior, 0)
+            self._init_warrior(warrior, 17)
 
     def has_alive_warriors(self):
         """
@@ -66,3 +66,5 @@ class Game:
                 instruction_pos = warrior.processes().pop(0)
                 instruction = self._core[instruction_pos]
                 instruction.execute(self._core, instruction_pos, warrior)
+                # TODO Fill current executed instruction with color
+                # self._gui.set_block_color(instruction_pos, Color.CURRENT_INSTRUCTION.value)
