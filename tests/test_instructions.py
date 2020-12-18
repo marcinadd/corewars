@@ -2,7 +2,7 @@ from src.core import Core
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 from src.game import Game
-from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN
+from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN, DJN
 from src.warrior import Warrior
 
 
@@ -216,6 +216,54 @@ def test_jmn_f_zero():
 def test_jmn_f_not_zero():
     warrior = Warrior(processes=[0])
     core = Core(data=[JMN('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 1), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_djn_a_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DJN('A', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 1, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_djn_a_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DJN('A', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 2, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_djn_b_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DJN('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 1, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_djn_b_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DJN('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [2]
+
+
+def test_djn_f_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DJN('F', '$', 2, '$', 0), DAT('F', '$', 0, '$', 0), DAT('F', '$', 1, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes() == [1]
+
+
+def test_djn_f_not_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DJN('B', '$', 2, '$', 0), DAT('F', '$', 0, '$', 1), DAT('F', '$', 0, '$', 1)])
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert warrior.processes() == [2]

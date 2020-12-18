@@ -210,6 +210,35 @@ class JMN(Instruction):
         warrior.add_process(position + jump)
 
 
+class DJN(JMN):
+    """
+    Decrement and jump if not zero (decrements a number by one, and jumps unless the result is 0)
+    """
+
+    @staticmethod
+    def _decrement_a(instruction, a):
+        decremented_a = instruction.a_value() - 1
+        instruction.set_a_value(decremented_a)
+        a.set_a_value(decremented_a)
+
+    @staticmethod
+    def _decrement_b(instruction, a):
+        decremented_b = instruction.b_value() - 1
+        instruction.set_a_value(decremented_b)
+        a.set_b_value(decremented_b)
+
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        instruction_to_decrement = core[position + a_pointer]
+        if self._modifier in (Modifier.A, Modifier.BA):
+            self._decrement_a(instruction_to_decrement, a)
+        elif self._modifier in (Modifier.B, Modifier.AB):
+            self._decrement_a(instruction_to_decrement, b)
+        elif self._modifier in (Modifier.F, Modifier.X, Modifier.I):
+            self._decrement_a(instruction_to_decrement, a)
+            self._decrement_b(instruction_to_decrement, a)
+        super(DJN, self).instruction(a, b, a_pointer, b_pointer, position, core, warrior)
+
+
 class SPL(Instruction):
     """
     Split (starts a second process at another address)

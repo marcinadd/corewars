@@ -22,6 +22,8 @@ INSTRUCTION_CODES = {
     "ADD": ADD,
     "SUB": SUB,
     "JMP": JMP,
+    "JMN": JMN,
+    "DJN": DJN,
     "SPL": SPL
 }
 
