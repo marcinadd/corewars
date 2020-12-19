@@ -142,7 +142,9 @@ class ArithmeticOperator(Enum):
 
 
 class ComparisonOperator(Enum):
-    EQUAL = '=='
+    EQUAL = "=="
+    NOT_EQUAL = "!="
+    LOWER_THAN = "<"
 
 
 def eval_expression(a, operator, b):
@@ -162,25 +164,29 @@ class ArithmeticInstruction(Instruction):
     """
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
-        modify_position = position + b_pointer
-        instruction_to_modify = core[modify_position]
-        operator = self.get_operator()
-        if self._modifier == Modifier.A:
-            instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.a_value()))
-        elif self._modifier == Modifier.B:
-            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.b_value()))
-        elif self._modifier == Modifier.AB:
-            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.a_value()))
-        elif self._modifier == Modifier.BA:
-            instruction_to_modify.set_a_value(eval_expression(b.b_value(), operator, a.a_value()))
-        elif self._modifier in (Modifier.F, Modifier.I):
-            instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.a_value()))
-            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.b_value()))
-        elif self._modifier == Modifier.X:
-            instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.b_value()))
-            instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.a_value()))
+        try:
+            modify_position = position + b_pointer
+            instruction_to_modify = core[modify_position]
+            operator = self.get_operator()
+            if self._modifier == Modifier.A:
+                instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.a_value()))
+            elif self._modifier == Modifier.B:
+                instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.b_value()))
+            elif self._modifier == Modifier.AB:
+                instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.a_value()))
+            elif self._modifier == Modifier.BA:
+                instruction_to_modify.set_a_value(eval_expression(b.b_value(), operator, a.a_value()))
+            elif self._modifier in (Modifier.F, Modifier.I):
+                instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.a_value()))
+                instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.b_value()))
+            elif self._modifier == Modifier.X:
+                instruction_to_modify.set_a_value(eval_expression(b.a_value(), operator, a.b_value()))
+                instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.a_value()))
 
-        warrior.add_process(position + 1)
+            warrior.add_process(position + 1)
+        except ZeroDivisionError:
+            # Kill warrior process
+            pass
 
     def get_operator(self):
         # Implemented in extending classes
@@ -198,7 +204,7 @@ class ADD(ArithmeticInstruction):
 
 class SUB(ArithmeticInstruction):
     """
-    Multiply (multiplies one number with another)
+    Subtract (subtracts one number from another)
     """
 
     def get_operator(self):
@@ -206,8 +212,30 @@ class SUB(ArithmeticInstruction):
 
 
 class MUL(ArithmeticInstruction):
+    """
+       Multiply (multiplies one number with another)
+    """
+
     def get_operator(self):
         return ArithmeticOperator.MULTIPLY
+
+
+class DIV(ArithmeticInstruction):
+    """
+       Divide (divides one number with another)
+    """
+
+    def get_operator(self):
+        return ArithmeticOperator.DIVIDE
+
+
+class MOD(ArithmeticInstruction):
+    """
+       Modulus (divides one number with another and gives the remainder)
+    """
+
+    def get_operator(self):
+        return ArithmeticOperator.MODULO
 
 
 class JMP(Instruction):
@@ -328,3 +356,30 @@ class SEQ(CompareAndSkipInstruction):
 
     def get_operator(self):
         return ComparisonOperator.EQUAL
+
+
+class SNE(CompareAndSkipInstruction):
+    """
+    Skip if not equal (compares two instructions, and skips the next instruction if they aren't equal)
+    """
+
+    def get_operator(self):
+        return ComparisonOperator.NOT_EQUAL
+
+
+class SLT(CompareAndSkipInstruction):
+    """
+    Skip if lower than (compares two values, and skips the next instruction if the first is lower than the second)
+    """
+
+    def get_operator(self):
+        return ComparisonOperator.LOWER_THAN
+
+
+class NOP(Instruction):
+    """
+    No operation (does nothing)
+    """
+
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        warrior.add_process(position + 1)

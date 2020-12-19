@@ -2,7 +2,7 @@ from src.core import Core
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 from src.game import Game
-from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN, DJN, SEQ
+from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN, DJN, SEQ, DIV, MOD
 from src.warrior import Warrior
 
 
@@ -504,3 +504,19 @@ def test_seq_i_no():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert warrior.processes()[0] == 1
+
+
+def test_div_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[DIV('I', '$', 1, '$', 2), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert len(warrior.processes()) == 0
+
+
+def test_mod_zero():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOD('I', '$', 1, '$', 2), DAT('F', '$', 0, '$', 0), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert len(warrior.processes()) == 0

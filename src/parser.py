@@ -22,11 +22,17 @@ INSTRUCTION_CODES = {
     "ADD": ADD,
     "SUB": SUB,
     "MUL": MUL,
+    "DIV": DIV,
+    "MOD": MOD,
     "JMP": JMP,
     "JMZ": JMZ,
     "JMN": JMN,
     "DJN": DJN,
-    "SPL": SPL
+    "SEQ": SEQ,
+    "SNE": SNE,
+    "SLT": SLT,
+    "SPL": SPL,
+    "NOP": NOP
 }
 
 
