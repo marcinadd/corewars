@@ -2,7 +2,7 @@ from src.core import Core
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 from src.game import Game
-from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN, DJN
+from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN, DJN, SEQ
 from src.warrior import Warrior
 
 
@@ -392,3 +392,115 @@ def test_post_decrement_a():
     game.simulation_step()
     assert core[1].a_value() == 0
     assert core[1].b_value() == 0
+
+
+def test_seq_a_yes():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('A', '$', 1, '$', 2), DAT('F', '$', 1, '$', 4), DAT('F', '$', 1, '$', 5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 2
+
+
+def test_seq_a_no():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('A', '$', 1, '$', 2), DAT('F', '$', 1, '$', 4), DAT('F', '$', 2, '$', 5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 1
+
+
+def test_seq_b_yes():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('B', '$', 1, '$', 2), DAT('F', '$', 2, '$', 4), DAT('F', '$', 3, '$', 4)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 2
+
+
+def test_seq_b_no():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('B', '$', 1, '$', 2), DAT('F', '$', 1, '$', 4), DAT('F', '$', 2, '$', 5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 1
+
+
+def test_seq_ab_yes():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('AB', '$', 1, '$', 2), DAT('F', '$', 2, '$', 4), DAT('F', '$', 3, '$', 2)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 2
+
+
+def test_seq_ab_no():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('AB', '$', 1, '$', 2), DAT('F', '$', 1, '$', 4), DAT('F', '$', 4, '$', 5)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 1
+
+
+def test_seq_ba_yes():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('BA', '$', 1, '$', 2), DAT('F', '$', 2, '$', 4), DAT('F', '$', 4, '$', 2)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 2
+
+
+def test_seq_ba_no():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('BA', '$', 1, '$', 2), DAT('F', '$', 1, '$', 4), DAT('F', '$', 3, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 1
+
+
+def test_seq_f_yes():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('F', '$', 1, '$', 2), DAT('F', '$', 2, '$', 4), DAT('F', '$', 2, '$', 4)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 2
+
+
+def test_seq_f_no():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('F', '$', 1, '$', 2), DAT('F', '$', 1, '$', 4), DAT('F', '$', 1, '$', 1)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 1
+
+
+def test_seq_x_yes():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('X', '$', 1, '$', 2), DAT('F', '$', 2, '$', 4), DAT('F', '$', 4, '$', 2)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 2
+
+
+def test_seq_x_no():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('X', '$', 1, '$', 2), DAT('F', '$', 1, '$', 4), DAT('F', '$', 1, '$', 4)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 1
+
+
+def test_seq_i_yes():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('I', '$', 1, '$', 2), DAT('F', '$', 2, '$', 4), DAT('F', '$', 2, '$', 4)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 2
+
+
+def test_seq_i_no():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[SEQ('I', '$', 1, '$', 2), JMP('F', '$', 2, '$', 4), DAT('F', '$', 2, '$', 4)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert warrior.processes()[0] == 1

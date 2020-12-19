@@ -89,6 +89,13 @@ class Instruction(ABC):
         b_value = self._b_value
         return f'{name}.{modifier} {a_mode}{a_value}, {b_mode}{b_value}'
 
+    def __eq__(self, other):
+        return (
+                self.__class__ == other.__class__ and self.modifier() == other.modifier() and
+                self.a_mode() == other.a_mode() and self.a_value() == other.a_value() and
+                self.b_mode() == other.b_mode() and self.b_value() == other.b_value()
+        )
+
 
 class DAT(Instruction):
     """
@@ -134,9 +141,13 @@ class ArithmeticOperator(Enum):
     MODULO = '%'
 
 
+class ComparisonOperator(Enum):
+    EQUAL = '=='
+
+
 def eval_expression(a, operator, b):
     """
-    Evaluate mathematical expression; for example 2 / 3
+    Evaluate mathematical or compare expression; for example 2 / 3
     :param a: A value
     :param operator: ArithmeticOperator
     :param b: B value
@@ -277,3 +288,43 @@ class SPL(Instruction):
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         warrior.add_process(position + 1)
         warrior.add_process(position + a_pointer)
+
+
+class CompareAndSkipInstruction(Instruction):
+    def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
+        operator = self.get_operator()
+        skip = False
+        if self._modifier == Modifier.A:
+            skip = eval_expression(a.a_value(), operator, b.a_value())
+        elif self._modifier == Modifier.B:
+            skip = eval_expression(a.b_value(), operator, b.b_value())
+        elif self._modifier == Modifier.AB:
+            skip = eval_expression(a.a_value(), operator, b.b_value())
+        elif self._modifier == Modifier.BA:
+            skip = eval_expression(a.b_value(), operator, b.a_value())
+        elif self._modifier == Modifier.F:
+            first = eval_expression(a.a_value(), operator, b.a_value())
+            second = eval_expression(a.b_value(), operator, b.b_value())
+            skip = first and second
+        elif self._modifier == Modifier.X:
+            first = eval_expression(a.a_value(), operator, b.b_value())
+            second = eval_expression(a.b_value(), operator, b.a_value())
+            skip = first and second
+        elif self._modifier == Modifier.I:
+            skip = a == b
+
+        next_instruction = position + (2 if skip else 1)
+        warrior.add_process(next_instruction)
+
+    def get_operator(self):
+        # Implemented in extending classes
+        return ComparisonOperator.EQUAL  # Set default to fix linter errors
+
+
+class SEQ(CompareAndSkipInstruction):
+    """
+    Skip if equal (compares two instructions, and skips the next instruction if they are equal)
+    """
+
+    def get_operator(self):
+        return ComparisonOperator.EQUAL
