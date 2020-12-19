@@ -21,7 +21,9 @@ INSTRUCTION_CODES = {
     "MOV": MOV,
     "ADD": ADD,
     "SUB": SUB,
+    "MUL": MUL,
     "JMP": JMP,
+    "JMZ": JMZ,
     "JMN": JMN,
     "DJN": DJN,
     "SPL": SPL

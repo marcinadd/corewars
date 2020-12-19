@@ -65,9 +65,9 @@ class Core:
         # Indirect addressing
         address = 0
         if mode in (Mode.A_INDIRECT, Mode.A_PRE_DEC_INDIRECT, Mode.A_POST_INC_INDIRECT):
-            return self[position].a_value()
+            return self[position].a_value() + value
         elif mode in (Mode.B_INDIRECT, Mode.B_PRE_DEC_INDIRECT, Mode.B_POST_INC_INDIRECT):
-            return self[position].b_value()
+            return self[position].b_value() + value
 
     def _check_predecrement(self, mode, position):
         if mode == Mode.A_PRE_DEC_INDIRECT:

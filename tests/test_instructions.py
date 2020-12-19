@@ -20,7 +20,61 @@ def test_instruction_to_str():
     assert str(instruction) == 'DAT.AB #1, @-1'
 
 
-def test_mov_typical():
+def test_mov_a():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOV('A', '$', '1', '$', '2'), DAT('F', '$', 1, '$', 2), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].a_value() == 1
+    assert game.core()[2].b_value() == 0
+
+
+def test_mov_b():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOV('B', '$', '1', '$', '2'), DAT('F', '$', 1, '$', 3), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].a_value() == 0
+    assert game.core()[2].b_value() == 3
+
+
+def test_mov_ab():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOV('AB', '$', '1', '$', '2'), DAT('F', '$', 1, '$', 4), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].a_value() == 0
+    assert game.core()[2].b_value() == 1
+
+
+def test_mov_ba():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOV('BA', '$', '1', '$', '2'), DAT('F', '$', 1, '$', 5), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].a_value() == 5
+    assert game.core()[2].b_value() == 0
+
+
+def test_mov_f():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOV('F', '$', '1', '$', '2'), DAT('F', '$', 1, '$', 6), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].a_value() == 1
+    assert game.core()[2].b_value() == 6
+
+
+def test_mov_x():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOV('X', '$', '1', '$', '2'), DAT('F', '$', 1, '$', 7), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert game.core()[2].a_value() == 7
+    assert game.core()[2].b_value() == 1
+
+
+def test_mov_i():
     warrior = Warrior(processes=[0])
     core = Core(data=[MOV('I', '$', '1', '$', '2'), DAT('F', '$', 1, '$', 2), DAT('F', '$', 0, '$', 0)])
     game = Game(core=core, warriors=[warrior], init_warriors=False)
@@ -329,3 +383,12 @@ def test_djn_f_not_zero():
     game = Game(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert warrior.processes() == [2]
+
+
+def test_post_decrement_a():
+    warrior = Warrior(processes=[0])
+    core = Core(data=[MOV('I', '}', 1, '$', 1), DAT('F', '$', 0, '$', 0)])
+    game = Game(core=core, warriors=[warrior], init_warriors=False)
+    game.simulation_step()
+    assert core[1].a_value() == 0
+    assert core[1].b_value() == 0

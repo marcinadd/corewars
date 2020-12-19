@@ -16,10 +16,10 @@ class Instruction(ABC):
         :param b_mode: String b_mode; for example "#"
         :param b_value: String b_value; for example "-1"
         """
-        self._modifier = Modifier(modifier) if modifier else Modifier.AB
-        self._a_mode = Mode(a_mode) if a_mode else Mode.DIRECT
+        self._modifier = Modifier(modifier.upper()) if modifier else Modifier.AB
+        self._a_mode = Mode(a_mode.upper()) if a_mode else Mode.DIRECT
         self._a_value = int(a_value) if a_value else 0
-        self._b_mode = Mode(b_mode) if b_mode else Mode.DIRECT
+        self._b_mode = Mode(b_mode.upper()) if b_mode else Mode.DIRECT
         self._b_value = int(b_value) if b_value else 0
 
     def modifier(self):
@@ -51,14 +51,14 @@ class Instruction(ABC):
         :param warrior: Warrior object to queue next task
         """
         a_pointer = core.get_core_address_mode_value(self._a_mode, self._a_value, position)
-        b_pointer = core.get_core_address_mode_value(self._b_mode, self._b_value, position)
         a = copy(core[a_pointer + position])
-        b = copy(core[b_pointer + position])
-
-        # Postincrement (if necessary) after copy instruction
         core.check_postincrement(self._a_mode, self._a_value, position)
+
+        b_pointer = core.get_core_address_mode_value(self._b_mode, self._b_value, position)
+        b = copy(core[b_pointer + position])
         core.check_postincrement(self._b_mode, self._b_value, position)
 
+        # Postincrement (if necessary) after copy instruction
         core.update_core_gui(a_pointer + position, warrior)
         core.update_core_gui(b_pointer + position, warrior)
 
@@ -106,6 +106,20 @@ class MOV(Instruction):
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         modify_position = position + b_pointer
+        if self._modifier == Modifier.A:
+            core[modify_position].set_a_value(a.a_value())
+        elif self._modifier == Modifier.B:
+            core[modify_position].set_b_value(a.b_value())
+        elif self._modifier == Modifier.AB:
+            core[modify_position].set_b_value(a.a_value())
+        elif self._modifier == Modifier.BA:
+            core[modify_position].set_a_value(a.b_value())
+        elif self._modifier == Modifier.F:
+            core[modify_position].set_a_value(a.a_value())
+            core[modify_position].set_b_value(a.b_value())
+        elif self._modifier == Modifier.X:
+            core[modify_position].set_a_value(a.b_value())
+            core[modify_position].set_b_value(a.a_value())
         if self._modifier == Modifier.I:
             core[modify_position] = a
 
@@ -173,11 +187,16 @@ class ADD(ArithmeticInstruction):
 
 class SUB(ArithmeticInstruction):
     """
-    Subtract (subtracts one number from another)
+    Multiply (multiplies one number with another)
     """
 
     def get_operator(self):
         return ArithmeticOperator.SUBTRACT
+
+
+class MUL(ArithmeticInstruction):
+    def get_operator(self):
+        return ArithmeticOperator.MULTIPLY
 
 
 class JMP(Instruction):

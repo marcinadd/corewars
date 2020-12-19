@@ -45,7 +45,7 @@ class Game:
         """
         for warrior in self._warriors:
             # TODO Randomize warrior location here
-            self._init_warrior(warrior, 17)
+            self._init_warrior(warrior, 0)
 
     def has_alive_warriors(self):
         """
