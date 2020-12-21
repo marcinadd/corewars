@@ -1,36 +1,29 @@
-from io import StringIO
+import argparse
+import sys
 
 import pygame
 
+from src.file import get_warrior_list
 from src.game import Game
 from src.gui.gui import PyGameGUI
-from src.parser import *
 
 SCREEN_X = 1024
 SCREEN_Y = 768
 
 
-def main():
-    # TODO Read from file
-    data = """
-MOV.i	$0,	$-396
-SEQ.i	}-1,	$5
-JMP.b	$-2,	>-2
+def parse_args(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('warrior_files', nargs='*')
+    return parser.parse_args(args[1:])
 
-SPL.b	$-399,	#0
 
-spl.b	#2,	}0
-mov.i	$2,	}-1
-dat.f	}-2,	}-2
-"""
-
-    file_handle = StringIO(data)
-    # Parse warrior
-    warrior = parse_warrior(file_handle)
+def main(args):
+    args = parse_args(args)
+    warriors = get_warrior_list(args.warrior_files)
     # Init gui
     gui = PyGameGUI(SCREEN_X, SCREEN_Y)
     # Init game
-    game = Game([warrior], core_size=8000, gui=gui)
+    game = Game(warriors, core_size=8000, gui=gui)
 
     # Simulate
     while game.has_alive_warriors():
@@ -41,4 +34,4 @@ dat.f	}-2,	}-2
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
