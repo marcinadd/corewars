@@ -102,3 +102,6 @@ class Core:
         if self._gui:
             block_number = self.get_address_mod_core_size(block_number)
             self._gui.set_block_color(block_number, warrior.color(), event)
+
+    def size(self):
+        return self._size

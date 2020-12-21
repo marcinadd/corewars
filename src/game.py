@@ -1,7 +1,9 @@
 import copy
+from random import randrange
 
 from src.core import Core
 from src.enum.event import CoreEvent
+from src.gui.colors import Color
 
 
 class Game:
@@ -20,6 +22,7 @@ class Game:
             self._gui.init_game_screen()
         if init_warriors:
             self.init_warriors()
+            self.set_warriors_colors()
 
     def core(self):
         return self._core
@@ -42,11 +45,21 @@ class Game:
 
     def init_warriors(self):
         """
-        Iterates all warriors and load them into core
+        Iterates all warriors and loads them into core
         """
-        for warrior in self._warriors:
-            # TODO Randomize warrior location here
-            self._init_warrior(warrior, 540)
+        core_size = self._core.size()
+        start_position = randrange(core_size)
+        space_between_warriors = core_size // len(self._warriors)
+
+        for i, warrior in enumerate(self._warriors):
+            self._init_warrior(warrior, start_position + i * space_between_warriors)
+
+    def set_warriors_colors(self):
+        """
+        Sets warrior colors from Color.WARRIOR_COLORS
+        """
+        for i, warrior in enumerate(self._warriors):
+            warrior.set_color(Color.WARRIOR_COLORS.value[i])
 
     def has_alive_warriors(self):
         """

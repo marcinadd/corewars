@@ -27,3 +27,6 @@ class Warrior:
 
     def color(self):
         return self._color
+
+    def set_color(self, color):
+        self._color = color
