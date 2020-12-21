@@ -1,5 +1,6 @@
 from enum import Enum
 
+from src.enum.event import CoreEvent
 from src.enum.mode import Mode
 from src.instructions import DAT
 
@@ -44,12 +45,13 @@ class Core:
         """
         return address % self._size
 
-    def get_core_address_mode_value(self, mode, value, instruction_pos):
+    def get_core_address_mode_value(self, mode, value, instruction_pos, warrior):
         """
         Get indirect pointer to referenced instruction
         :param mode: Address mode
         :param value: Address value
         :param instruction_pos:
+        :param warrior: Warrior which execute instruction
         :return: Indirect pointer to referenced instruction
         """
         if mode == Mode.IMMEDIATE:
@@ -61,26 +63,29 @@ class Core:
 
         position = instruction_pos + value
         # Predecrement (if necessary)
-        self._check_predecrement(mode, value)
+        self._check_predecrement(mode, value, warrior)
         # Indirect addressing
-        address = 0
         if mode in (Mode.A_INDIRECT, Mode.A_PRE_DEC_INDIRECT, Mode.A_POST_INC_INDIRECT):
             return self[position].a_value() + value
         elif mode in (Mode.B_INDIRECT, Mode.B_PRE_DEC_INDIRECT, Mode.B_POST_INC_INDIRECT):
             return self[position].b_value() + value
 
-    def _check_predecrement(self, mode, position):
+    def _check_predecrement(self, mode, position, warrior):
         if mode == Mode.A_PRE_DEC_INDIRECT:
             self._add_value_to_core_instruction_field(position, FieldLetter.A, -1)
+            self.update_core_gui(position, warrior, CoreEvent.WRITE)
         elif mode == Mode.B_PRE_DEC_INDIRECT:
             self._add_value_to_core_instruction_field(position, FieldLetter.B, -1)
+            self.update_core_gui(position, warrior, CoreEvent.WRITE)
 
-    def check_postincrement(self, mode, value, instruction_pos):
+    def check_postincrement(self, mode, value, instruction_pos, warrior):
         position = instruction_pos + value
         if mode == Mode.A_POST_INC_INDIRECT:
             self._add_value_to_core_instruction_field(position, FieldLetter.A, 1)
+            self.update_core_gui(position, warrior, CoreEvent.WRITE)
         elif mode == Mode.B_POST_INC_INDIRECT:
             self._add_value_to_core_instruction_field(position, FieldLetter.B, 1)
+            self.update_core_gui(position, warrior, CoreEvent.WRITE)
 
     def _add_value_to_core_instruction_field(self, position, field_letter, change):
         instruction = self[position]
@@ -93,7 +98,7 @@ class Core:
             value = instruction.b_value() + change
             instruction.set_b_value(value)
 
-    def update_core_gui(self, block_number, warrior):
+    def update_core_gui(self, block_number, warrior, event):
         if self._gui:
             block_number = self.get_address_mod_core_size(block_number)
-            self._gui.set_block_color(block_number, warrior.color())
+            self._gui.set_block_color(block_number, warrior.color(), event)

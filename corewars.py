@@ -12,16 +12,18 @@ SCREEN_Y = 768
 
 def main():
     # TODO Read from file
-    """
-
-    :return:
-    """
     data = """
-mov.a	#0,	>4	;ponteiros e danificador de codigo
-mov.i	}-1,	>-1	;auto copia a frente
-djn.b   $-1,    #4      ;loop com contador(4)
-mov.ab	#4,	$3	;recarrega proximo loop
+MOV.i	$0,	$-396
+SEQ.i	}-1,	$5
+JMP.b	$-2,	>-2
+
+SPL.b	$-399,	#0
+
+spl.b	#2,	}0
+mov.i	$2,	}-1
+dat.f	}-2,	}-2
 """
+
     file_handle = StringIO(data)
     # Parse warrior
     warrior = parse_warrior(file_handle)

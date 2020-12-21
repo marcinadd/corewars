@@ -1,6 +1,7 @@
 import copy
 
 from src.core import Core
+from src.enum.event import CoreEvent
 
 
 class Game:
@@ -36,7 +37,7 @@ class Game:
         for offset, instruction in enumerate(warrior.instructions()):
             address = starting_core_address + offset
             self._core[address] = copy.copy(instruction)
-            self._core.update_core_gui(address, warrior)
+            self._core.update_core_gui(address, warrior, CoreEvent.EXECUTE)
         warrior.add_process(starting_core_address)
 
     def init_warriors(self):
@@ -45,7 +46,7 @@ class Game:
         """
         for warrior in self._warriors:
             # TODO Randomize warrior location here
-            self._init_warrior(warrior, 0)
+            self._init_warrior(warrior, 540)
 
     def has_alive_warriors(self):
         """

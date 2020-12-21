@@ -2,6 +2,7 @@ from abc import abstractmethod, ABC
 from copy import copy
 from enum import Enum
 
+from src.enum.event import CoreEvent
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
 
@@ -50,19 +51,22 @@ class Instruction(ABC):
         :param position: Instruction position in core addressing mode
         :param warrior: Warrior object to queue next task
         """
-        a_pointer = core.get_core_address_mode_value(self._a_mode, self._a_value, position)
+        a_pointer = core.get_core_address_mode_value(self._a_mode, self._a_value, position, warrior)
         a = copy(core[a_pointer + position])
-        core.check_postincrement(self._a_mode, self._a_value, position)
+        core.check_postincrement(self._a_mode, self._a_value, position, warrior)
 
-        b_pointer = core.get_core_address_mode_value(self._b_mode, self._b_value, position)
+        b_pointer = core.get_core_address_mode_value(self._b_mode, self._b_value, position, warrior)
         b = copy(core[b_pointer + position])
-        core.check_postincrement(self._b_mode, self._b_value, position)
+        core.check_postincrement(self._b_mode, self._b_value, position, warrior)
 
-        # Postincrement (if necessary) after copy instruction
-        core.update_core_gui(a_pointer + position, warrior)
-        core.update_core_gui(b_pointer + position, warrior)
-
-        self.instruction(a, b, a_pointer, b_pointer, position, core, warrior)
+        result = self.instruction(a, b, a_pointer, b_pointer, position, core, warrior)
+        core.update_core_gui(position + a_pointer, warrior, CoreEvent.EXECUTE)
+        if result is not None:
+            event_a, event_b = result
+            if event_a:
+                core.update_core_gui(position + a_pointer, warrior, event_a)
+            if event_b:
+                core.update_core_gui(position + b_pointer, warrior, event_b)
 
     @abstractmethod
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
@@ -113,6 +117,7 @@ class MOV(Instruction):
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         modify_position = position + b_pointer
+        result = (None, None)
         if self._modifier == Modifier.A:
             core[modify_position].set_a_value(a.a_value())
         elif self._modifier == Modifier.B:
@@ -127,10 +132,11 @@ class MOV(Instruction):
         elif self._modifier == Modifier.X:
             core[modify_position].set_a_value(a.b_value())
             core[modify_position].set_b_value(a.a_value())
-        if self._modifier == Modifier.I:
+        elif self._modifier == Modifier.I:
             core[modify_position] = a
-
+            result = CoreEvent.READ, CoreEvent.WRITE
         warrior.add_process(position + 1)
+        return result
 
 
 class ArithmeticOperator(Enum):
@@ -322,6 +328,7 @@ class CompareAndSkipInstruction(Instruction):
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         operator = self.get_operator()
         skip = False
+        result = (None, None)
         if self._modifier == Modifier.A:
             skip = eval_expression(a.a_value(), operator, b.a_value())
         elif self._modifier == Modifier.B:
@@ -340,9 +347,11 @@ class CompareAndSkipInstruction(Instruction):
             skip = first and second
         elif self._modifier == Modifier.I:
             skip = a == b
+            result = (CoreEvent.READ, CoreEvent.READ)
 
         next_instruction = position + (2 if skip else 1)
         warrior.add_process(next_instruction)
+        return result
 
     def get_operator(self):
         # Implemented in extending classes
