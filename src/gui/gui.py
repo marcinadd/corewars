@@ -1,3 +1,4 @@
+import math
 from abc import abstractmethod
 
 import pygame
@@ -5,10 +6,11 @@ import pygame
 from src.enum.event import CoreEvent
 from src.gui.colors import Color
 
+BLOCKS_X = 100
+
 
 def divide_blocks(core_size):
-    # TODO Dividing blocks
-    return 100, 80
+    return BLOCKS_X, math.ceil(core_size // BLOCKS_X)
 
 
 class GUI:
@@ -48,9 +50,13 @@ class GUI:
     def _set_block_executed(self, block_number, color):
         pass
 
+    @abstractmethod
+    def clock_tick(self):
+        pass
+
 
 class PyGameGUI(GUI):
-    def __init__(self, width, height, ticks=250, core_size=8000, block_size=10):
+    def __init__(self, width, height, core_size, ticks=250, block_size=10):
         super().__init__(width, height, core_size)
         pygame.init()
         self._screen = pygame.display.set_mode((width, height))

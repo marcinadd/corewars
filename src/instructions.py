@@ -106,6 +106,13 @@ class DAT(Instruction):
     Data (kills the process)
     """
 
+    def __init__(self, modifier, a_mode, a_value, b_mode, b_value):
+        if b_value:
+            super(DAT, self).__init__(modifier, a_mode, a_value, b_mode, b_value)
+        else:
+            # When only one operand given it should be parsed as b operand
+            super(DAT, self).__init__(modifier, Mode.DIRECT.value, 0, a_mode, a_value)
+
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         pass
 

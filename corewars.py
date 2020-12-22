@@ -13,17 +13,19 @@ SCREEN_Y = 768
 
 def parse_args(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('warrior_files', nargs='*')
+    parser.add_argument('warriors', nargs='*')
+    parser.add_argument('--core-size', nargs='?', default=8000)
     return parser.parse_args(args[1:])
 
 
 def main(args):
     args = parse_args(args)
-    warriors = get_warrior_list(args.warrior_files)
+    warriors = get_warrior_list(args.warriors)
+    core_size = int(args.core_size)
     # Init gui
-    gui = PyGameGUI(SCREEN_X, SCREEN_Y)
+    gui = PyGameGUI(SCREEN_X, SCREEN_Y, core_size)
     # Init game
-    game = Game(warriors, core_size=8000, gui=gui)
+    game = Game(warriors, core_size=core_size, gui=gui)
 
     # Simulate
     while game.has_alive_warriors():
