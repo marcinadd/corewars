@@ -1,5 +1,5 @@
 import math
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 import pygame
 
@@ -61,7 +61,7 @@ class GUI:
         pass
 
     @abstractmethod
-    def print_round_text(self, round):
+    def print_round_text(self, round_num):
         pass
 
     @abstractmethod
@@ -69,7 +69,7 @@ class GUI:
         pass
 
 
-class PyGameGUI(GUI):
+class PyGameGUI(GUI, ABC):
     def __init__(self, width, height, core_size, ticks=250, block_size=10):
         super().__init__(width, height, core_size)
         pygame.init()

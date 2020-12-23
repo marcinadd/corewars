@@ -61,15 +61,25 @@ class Game:
         for i, warrior in enumerate(self._warriors):
             warrior.set_color(Color.WARRIOR_COLORS.value[i])
 
-    def has_alive_warriors(self):
+    def is_round_ended(self):
+        # TODO Support testing warriors with only one warrior in core
+        return len(self.get_alive_warriors()) <= 1
+
+    def get_alive_warriors(self):
         """
-        Check if game as any alive warrior
-        :return: True if is any alive warrior else false
+        Return list of warriors which have at least one process
+        :return: Alive warrior count
         """
+        return [warrior for warrior in self._warriors if warrior.processes()]
+
+    def update_round_results(self):
+        """
+        Check if warriors is alive and increment its wins or loses
+        """
+        alive_warriors = self.get_alive_warriors()
         for warrior in self._warriors:
-            if warrior.processes():
-                return True
-        return False
+            info = warrior.warrior_info()
+            info.inc_wins() if warrior in alive_warriors else info.inc_loses()
 
     def simulation_step(self):
         """

@@ -2,7 +2,7 @@ from src.gui.colors import Color
 
 
 class Warrior:
-    def __init__(self, instructions=None, processes=None, color=Color.WARRIOR_DEFAULT.value):
+    def __init__(self, instructions=None, processes=None, color=Color.WARRIOR_DEFAULT.value, name="Warrior"):
         """
 
         :param instructions: Warrior instruction list; Optional to simplify testing
@@ -11,6 +11,7 @@ class Warrior:
         self._instructions = instructions if instructions else []
         self._processes = processes if processes else []
         self._color = color
+        self._warrior_info = WarriorInfo(name)
 
     def instructions(self):
         return self._instructions
@@ -30,3 +31,32 @@ class Warrior:
 
     def set_color(self, color):
         self._color = color
+
+    def warrior_info(self):
+        return self._warrior_info
+
+
+class WarriorInfo:
+    def __init__(self, name):
+        self._name = name
+        self._wins = 0
+        self._ties = 0
+        self._loses = 0
+
+    def inc_wins(self):
+        self._wins += 1
+
+    def inc_ties(self):
+        self._ties += 1
+
+    def inc_loses(self):
+        self._loses += 1
+
+    def get_wins(self):
+        return self._wins
+
+    def get_ties(self):
+        return self._ties
+
+    def get_loses(self):
+        return self._loses

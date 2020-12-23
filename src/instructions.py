@@ -107,7 +107,7 @@ class DAT(Instruction):
     """
 
     def __init__(self, modifier, a_mode, a_value, b_mode, b_value):
-        if b_value:
+        if b_value is not None:
             super(DAT, self).__init__(modifier, a_mode, a_value, b_mode, b_value)
         else:
             # When only one operand given it should be parsed as b operand

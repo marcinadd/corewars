@@ -28,10 +28,11 @@ def main(args):
     game = Game(warriors, core_size=core_size, gui=gui)
 
     # Simulate
-    while game.has_alive_warriors():
+    while not game.is_round_ended():
         game.simulation_step()
         gui.clock_tick()
         pygame.display.flip()
+    game.update_round_results()
     pygame.quit()
 
 
