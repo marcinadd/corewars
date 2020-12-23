@@ -5,8 +5,10 @@ import pygame
 
 from src.enum.event import CoreEvent
 from src.gui.colors import Color
+from src.gui.strings import STRINGS
 
 BLOCKS_X = 100
+FONT_LOCATION = "font/font.ttf"
 
 
 def divide_blocks(core_size):
@@ -25,8 +27,16 @@ class GUI:
         x = block_number % self._blocks_x
         return x, y
 
-    @abstractmethod
     def init_game_screen(self):
+        self._init_core_view()
+        self._init_info_view()
+
+    @abstractmethod
+    def _init_core_view(self):
+        pass
+
+    @abstractmethod
+    def _init_info_view(self):
         pass
 
     @abstractmethod
@@ -51,6 +61,10 @@ class GUI:
         pass
 
     @abstractmethod
+    def print_round_text(self, round):
+        pass
+
+    @abstractmethod
     def clock_tick(self):
         pass
 
@@ -64,6 +78,7 @@ class PyGameGUI(GUI):
         self._screen.fill(Color.BACKGROUND.value)
         self._ticks = ticks
         self._block_size = block_size
+        self._width = width
 
     def clock_tick(self):
         self._clock.tick(self._ticks)
@@ -103,7 +118,23 @@ class PyGameGUI(GUI):
         x, y = self._get_position_in_pixels(block_number)
         self._draw_rect_with_border(x, y, self._block_size, self._block_size, color)
 
-    def init_game_screen(self):
+    def _init_core_view(self):
         for i in range(self._core_size):
             self.set_block_color(i, Color.GRAY.value, CoreEvent.EXECUTE)
         pygame.display.flip()
+
+    def _init_info_view(self):
+        self.print_round_text(0)
+
+    def _get_start_info_position(self):
+        return BLOCKS_X * self._block_size
+
+    def print_round_text(self, round_num):
+        font = pygame.font.Font(FONT_LOCATION, 16)
+        text = font.render(f'{STRINGS["ROUND"]} {round_num}', True, Color.TEXT_COLOR.value)
+        text_rect = text.get_rect()
+        info_block_start_position = self._get_start_info_position()
+        position_x = (self._width - info_block_start_position) // 2 + info_block_start_position
+        text_rect.center = (position_x, 20)
+        self._screen.blit(text, text_rect)
+        pygame.display.update()
