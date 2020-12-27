@@ -65,6 +65,10 @@ class GUI:
         pass
 
     @abstractmethod
+    def print_game_info(self, warriors):
+        pass
+
+    @abstractmethod
     def clock_tick(self):
         pass
 
@@ -129,12 +133,51 @@ class PyGameGUI(GUI, ABC):
     def _get_start_info_position(self):
         return BLOCKS_X * self._block_size
 
-    def print_round_text(self, round_num):
-        font = pygame.font.Font(FONT_LOCATION, 16)
-        text = font.render(f'{STRINGS["ROUND"]} {round_num}', True, Color.TEXT_COLOR.value)
-        text_rect = text.get_rect()
+    def _get_info_x_center(self):
         info_block_start_position = self._get_start_info_position()
-        position_x = (self._width - info_block_start_position) // 2 + info_block_start_position
-        text_rect.center = (position_x, 20)
+        return (self._width - info_block_start_position) // 2
+
+    def print_round_text(self, round_num):
+        text = f'{STRINGS["ROUND"]} {round_num}'
+        offset_x = self._get_info_x_center()
+        offset_y = 20
+        self._print_standard_info_text(text, 16, offset_x, offset_y, center=True)
+        pygame.display.update()
+
+    def _print_standard_info_text(self, text_str, font_size, offset_x, offset_y, text_color=Color.TEXT_COLOR.value,
+                                  center=False):
+        font = pygame.font.Font(FONT_LOCATION, font_size)
+        text = font.render(text_str, True, text_color, Color.BACKGROUND.value)
+        text_rect = text.get_rect()
+        info_block_start_x_position = self._get_start_info_position()
+        text_position = (offset_x + info_block_start_x_position, offset_y)
+        if center:
+            text_rect.center = text_position
+        else:
+            text_rect.topleft = text_position
         self._screen.blit(text, text_rect)
+
+    def _print_warrior_name(self, warrior_number, warrior):
+        name = warrior.warrior_info().name()
+        offset_x = self._get_info_x_center()
+        offset_y = 100 + warrior_number * 100
+        self._print_standard_info_text(name, 13, offset_x, offset_y, warrior.color(), center=True)
+
+    def _print_warrior_details(self, warrior_number, warrior):
+        offset_x = 10
+        offset_y = 110 + warrior_number * 100
+        # Print Won-Lost-Tied
+        info = warrior.warrior_info()
+        wlt = f'W-L-T: {info.wins()}-{info.loses()}-{info.ties()}'
+        self._print_standard_info_text(wlt, 12, offset_x, offset_y)
+        # Print Processes
+        offset_y += 15
+        processes = f'Processes: {len(warrior.processes()): 4}'
+        self._print_standard_info_text(processes, 12, offset_x, offset_y)
+
+    def print_game_info(self, warriors):
+        for i, warrior in enumerate(warriors):
+            self._print_warrior_name(i, warrior)
+            self._print_warrior_details(i, warrior)
+
         pygame.display.update()

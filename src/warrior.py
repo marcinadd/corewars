@@ -52,11 +52,14 @@ class WarriorInfo:
     def inc_loses(self):
         self._loses += 1
 
-    def get_wins(self):
+    def wins(self):
         return self._wins
 
-    def get_ties(self):
+    def ties(self):
         return self._ties
 
-    def get_loses(self):
+    def loses(self):
         return self._loses
+
+    def name(self):
+        return self._name

@@ -31,7 +31,7 @@ def main(args):
     while not game.is_round_ended():
         game.simulation_step()
         gui.clock_tick()
-        pygame.display.flip()
+        gui.print_game_info(warriors)
     game.update_round_results()
     pygame.quit()
 
