@@ -1,8 +1,6 @@
 import argparse
 import sys
 
-import pygame
-
 from src.file import get_warrior_list
 from src.game import Game
 from src.gui.gui import PyGameGUI
@@ -25,15 +23,11 @@ def main(args):
     # Init gui
     gui = PyGameGUI(SCREEN_X, SCREEN_Y, core_size)
     # Init game
-    game = Game(warriors, core_size=core_size, gui=gui)
-
-    # Simulate
-    while not game.is_round_ended():
-        game.simulation_step()
-        gui.clock_tick()
-        gui.print_game_info(warriors)
-    game.update_round_results()
-    pygame.quit()
+    game = Game(warriors, core_size, gui, 10)
+    # Play game
+    game.play()
+    # Close gui
+    gui.close()
 
 
 if __name__ == '__main__':

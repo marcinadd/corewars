@@ -72,6 +72,10 @@ class GUI:
     def clock_tick(self):
         pass
 
+    @abstractmethod
+    def close(self):
+        pass
+
 
 class PyGameGUI(GUI, ABC):
     def __init__(self, width, height, core_size, ticks=250, block_size=10):
@@ -128,7 +132,7 @@ class PyGameGUI(GUI, ABC):
         pygame.display.flip()
 
     def _init_info_view(self):
-        self.print_round_text(0)
+        pass
 
     def _get_start_info_position(self):
         return BLOCKS_X * self._block_size
@@ -141,7 +145,7 @@ class PyGameGUI(GUI, ABC):
         text = f'{STRINGS["ROUND"]} {round_num}'
         offset_x = self._get_info_x_center()
         offset_y = 20
-        self._print_standard_info_text(text, 16, offset_x, offset_y, center=True)
+        self._print_standard_info_text(text, 20, offset_x, offset_y, center=True)
         pygame.display.update()
 
     def _print_standard_info_text(self, text_str, font_size, offset_x, offset_y, text_color=Color.TEXT_COLOR.value,
@@ -168,11 +172,11 @@ class PyGameGUI(GUI, ABC):
         offset_y = 110 + warrior_number * 100
         # Print Won-Lost-Tied
         info = warrior.warrior_info()
-        wlt = f'W-L-T: {info.wins()}-{info.loses()}-{info.ties()}'
+        wlt = f'W-L-T: {info.wins()}-{info.loses()}-{info.ties()}\t'
         self._print_standard_info_text(wlt, 12, offset_x, offset_y)
         # Print Processes
         offset_y += 15
-        processes = f'Processes: {len(warrior.processes()): 4}'
+        processes = f'Processes: {len(warrior.processes()): 4}\t'
         self._print_standard_info_text(processes, 12, offset_x, offset_y)
 
     def print_game_info(self, warriors):
@@ -181,3 +185,6 @@ class PyGameGUI(GUI, ABC):
             self._print_warrior_details(i, warrior)
 
         pygame.display.update()
+
+    def close(self):
+        pygame.quit()
