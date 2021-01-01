@@ -43,6 +43,12 @@ INSTRUCTION_CODES = {
 
 
 def parse_instruction(line, line_number=1):
+    """
+    Parses single warrior instruction
+    :param line: Line to parse
+    :param line_number: Line number for error reporting
+    :return: A class which extends Instruction abstract class
+    """
     match = re.search(INSTRUCTION_PATTERN, line.upper())
     if not match:
         raise InvalidInstructionSyntaxException(line, line_number)
@@ -58,6 +64,11 @@ def parse_instruction(line, line_number=1):
 
 
 def try_parse_name(line):
+    """
+    Checks if line contains warrior name and parses it
+    :param line: Line string
+    :return: Warrior name or None
+    """
     match = re.search(NAME_PATTERN, line)
     return list(match.groups())[0] if match else None
 

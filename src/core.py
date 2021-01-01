@@ -71,6 +71,12 @@ class Core:
             return self[position].b_value() + value
 
     def _check_predecrement(self, mode, position, warrior):
+        """
+        Private method; checks if mode is predecrement and perform predecrement if necessary
+        :param mode: Instruction mode
+        :param position: Instruction position
+        :param warrior: Warrior which executed this instruction
+        """
         if mode == Mode.A_PRE_DEC_INDIRECT:
             self._add_value_to_core_instruction_field(position, FieldLetter.A, -1)
             self.update_core_gui(position, warrior, CoreEvent.WRITE)
@@ -79,6 +85,13 @@ class Core:
             self.update_core_gui(position, warrior, CoreEvent.WRITE)
 
     def check_postincrement(self, mode, value, instruction_pos, warrior):
+        """
+            Checks if mode is postincrement and perform postincrement if necessary
+            :param mode: Instruction mode
+            :param value: Instruction operand value
+            :param instruction_pos: Instruction position
+            :param warrior: Warrior which executed this instruction
+        """
         position = instruction_pos + value
         if mode == Mode.A_POST_INC_INDIRECT:
             self._add_value_to_core_instruction_field(position, FieldLetter.A, 1)
@@ -88,6 +101,12 @@ class Core:
             self.update_core_gui(position, warrior, CoreEvent.WRITE)
 
     def _add_value_to_core_instruction_field(self, position, field_letter, change):
+        """
+        Adds "change" to instruction at "position"
+        :param position: Instruction position in core
+        :param field_letter: FieldLetter.A or FieldLetter.B; adds to first field or second
+        :param change: Value to add
+        """
         instruction = self[position]
         if field_letter == FieldLetter.A:
             # Adds change to instruction field A
@@ -99,6 +118,12 @@ class Core:
             instruction.set_b_value(value)
 
     def update_core_gui(self, block_number, warrior, event):
+        """
+        Sends event to core to update block at block_number
+        :param block_number: Block number to be updated
+        :param warrior: Warrior which executes event
+        :param event: Event type
+        """
         if self._gui:
             block_number = self.get_address_mod_core_size(block_number)
             self._gui.set_block_color(block_number, warrior.color(), event)

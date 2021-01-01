@@ -8,7 +8,7 @@ from src.enum.event import CoreEvent
 class Round:
     def __init__(self, warriors, core=None, core_size=8000, init_warriors=True, gui=None, number=0):
         """
-        Game constructor
+        Round constructor
         :param warriors: Required warriors list
         :param core: Optional core for testing purposes
         :param core_size: Other core size than default
@@ -89,6 +89,10 @@ class Round:
                 self._cycles += 1
 
     def play(self):
+        """
+        Executes simulation step and updates gui until round is not ended
+        :return:
+        """
         self._gui.print_round_text(self._number)
         while not self.is_ended():
             self.simulation_step()

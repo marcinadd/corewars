@@ -124,7 +124,6 @@ class MOV(Instruction):
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         modify_position = position + b_pointer
-        result = (None, None)
         if self._modifier == Modifier.A:
             core[modify_position].set_a_value(a.a_value())
         elif self._modifier == Modifier.B:
@@ -141,9 +140,7 @@ class MOV(Instruction):
             core[modify_position].set_b_value(a.a_value())
         elif self._modifier == Modifier.I:
             core[modify_position] = a
-            result = CoreEvent.READ, CoreEvent.WRITE
         warrior.add_process(position + 1)
-        return result
 
 
 class ArithmeticOperator(Enum):
@@ -197,6 +194,7 @@ class ArithmeticInstruction(Instruction):
                 instruction_to_modify.set_b_value(eval_expression(b.b_value(), operator, a.a_value()))
 
             warrior.add_process(position + 1)
+            return CoreEvent.READ, CoreEvent.WRITE
         except ZeroDivisionError:
             # Kill warrior process
             pass
@@ -274,6 +272,7 @@ class JMZ(Instruction):
         elif self._modifier in (Modifier.F, Modifier.X, Modifier.I):
             jump = a_pointer if a.a_value() == 0 and a.b_value() == 0 else 1
         warrior.add_process(position + jump)
+        return None, CoreEvent.READ
 
 
 class JMN(Instruction):
@@ -290,6 +289,7 @@ class JMN(Instruction):
         elif self._modifier in (Modifier.F, Modifier.X, Modifier.I):
             jump = a_pointer if a.a_value() != 0 or b.b_value() != 0 else 1
         warrior.add_process(position + jump)
+        return None, CoreEvent.READ
 
 
 class DJN(JMN):
@@ -319,6 +319,7 @@ class DJN(JMN):
             self._decrement_a(instruction_to_decrement, a)
             self._decrement_b(instruction_to_decrement, a)
         super(DJN, self).instruction(a, b, a_pointer, b_pointer, position, core, warrior)
+        return None, CoreEvent.WRITE
 
 
 class SPL(Instruction):
@@ -335,7 +336,6 @@ class CompareAndSkipInstruction(Instruction):
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         operator = self.get_operator()
         skip = False
-        result = (None, None)
         if self._modifier == Modifier.A:
             skip = eval_expression(a.a_value(), operator, b.a_value())
         elif self._modifier == Modifier.B:
@@ -354,11 +354,9 @@ class CompareAndSkipInstruction(Instruction):
             skip = first and second
         elif self._modifier == Modifier.I:
             skip = a == b
-            result = (CoreEvent.READ, CoreEvent.READ)
-
         next_instruction = position + (2 if skip else 1)
         warrior.add_process(next_instruction)
-        return result
+        return CoreEvent.READ, CoreEvent.WRITE
 
     def get_operator(self):
         # Implemented in extending classes

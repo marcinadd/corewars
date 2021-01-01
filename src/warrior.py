@@ -15,9 +15,6 @@ class Warrior:
         self._color = color
         self._warrior_info = WarriorInfo(name if name else WARRIOR_DEFAULT_NAME)
 
-    def instructions(self):
-        return self._instructions
-
     def add_process(self, position):
         """
         Adds process to warrior processes queue list
@@ -37,9 +34,19 @@ class Warrior:
     def warrior_info(self):
         return self._warrior_info
 
+    def instructions(self):
+        return self._instructions
+
 
 class WarriorInfo:
+    """
+    Warrior details name, wins, ties, loses for game results
+    """
+
     def __init__(self, name):
+        """
+        :param name:
+        """
         self._name = name
         self._wins = 0
         self._ties = 0
