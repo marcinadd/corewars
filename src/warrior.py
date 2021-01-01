@@ -1,8 +1,10 @@
 from src.gui.colors import Color
 
+WARRIOR_DEFAULT_NAME = "Warrior"
+
 
 class Warrior:
-    def __init__(self, instructions=None, processes=None, color=Color.WARRIOR_DEFAULT.value, name="Warrior"):
+    def __init__(self, instructions=None, processes=None, color=Color.WARRIOR_DEFAULT.value, name=None):
         """
 
         :param instructions: Warrior instruction list; Optional to simplify testing
@@ -11,7 +13,7 @@ class Warrior:
         self._instructions = instructions if instructions else []
         self._processes = processes if processes else []
         self._color = color
-        self._warrior_info = WarriorInfo(name)
+        self._warrior_info = WarriorInfo(name if name else WARRIOR_DEFAULT_NAME)
 
     def instructions(self):
         return self._instructions
