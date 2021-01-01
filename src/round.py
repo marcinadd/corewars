@@ -1,12 +1,12 @@
 import copy
-from random import randrange
+from random import randrange, sample
 
 from src.core import Core
 from src.enum.event import CoreEvent
 
 
 class Round:
-    def __init__(self, warriors, core=None, core_size=8000, init_warriors=True, gui=None, number=0):
+    def __init__(self, warriors, core=None, core_size=8000, init_warriors=True, gui=None, number=0, max_cycles=80000):
         """
         Round constructor
         :param warriors: Required warriors list
@@ -23,6 +23,7 @@ class Round:
             self.init_warriors()
         self._number = number
         self._cycles = 0
+        self._max_cycles = max_cycles
 
     def core(self):
         return self._core
@@ -54,12 +55,13 @@ class Round:
         start_position = randrange(core_size)
         space_between_warriors = core_size // len(self._warriors)
 
-        for i, warrior in enumerate(self._warriors):
+        shuffled_warriors = sample(self._warriors, len(self._warriors))
+        for i, warrior in enumerate(shuffled_warriors):
             self._init_warrior(warrior, start_position + i * space_between_warriors)
 
     def is_ended(self):
         # TODO Support testing warriors with only one warrior in core
-        return len(self.get_alive_warriors()) <= 1
+        return len(self.get_alive_warriors()) <= 1 or self._cycles > self._max_cycles
 
     def get_alive_warriors(self):
         """
@@ -70,12 +72,18 @@ class Round:
 
     def update_warriors_results(self):
         """
-        Check if warriors is alive and increment its wins or loses
+        Update alive warrior results after round ended
         """
         alive_warriors = self.get_alive_warriors()
-        for warrior in self._warriors:
-            info = warrior.warrior_info()
-            info.inc_wins() if warrior in alive_warriors else info.inc_loses()
+        if len(alive_warriors) == 1:
+            # Only one alive warrior remained; increment its wins
+            warrior = alive_warriors[0]
+            warrior.warrior_info().inc_wins()
+        else:
+            # Round ended after reaching max_cycles; increment ties for any alive warrior
+            for warrior in alive_warriors:
+                info = warrior.warrior_info()
+                info.inc_ties()
 
     def simulation_step(self):
         """
@@ -87,15 +95,19 @@ class Round:
                 instruction = self._core[instruction_pos]
                 instruction.execute(self._core, instruction_pos, warrior)
                 self._cycles += 1
+                if len(warrior.processes()) == 0:
+                    # If warrior doesn't have processes it lost in this round
+                    warrior.warrior_info().inc_loses()
 
     def play(self):
         """
         Executes simulation step and updates gui until round is not ended
-        :return:
         """
         self._gui.print_round_text(self._number)
+        # Play game
         while not self.is_ended():
             self.simulation_step()
             self._gui.clock_tick()
-            self._gui.print_game_info(self._warriors)
+            self._gui.print_game_info(self._warriors, self._cycles)
+        # Update results
         self.update_warriors_results()

@@ -65,7 +65,7 @@ class GUI:
         pass
 
     @abstractmethod
-    def print_game_info(self, warriors):
+    def print_game_info(self, warriors, cycles):
         pass
 
     @abstractmethod
@@ -179,10 +179,17 @@ class PyGameGUI(GUI, ABC):
         processes = f'Processes: {len(warrior.processes()): 4}\t'
         self._print_standard_info_text(processes, 12, offset_x, offset_y)
 
-    def print_game_info(self, warriors):
+    def _print_cycles(self, cycles):
+        text = f'Cycles: {cycles:5}'
+        offset_x = 10
+        offset_y = 40
+        self._print_standard_info_text(text, 14, offset_x, offset_y)
+
+    def print_game_info(self, warriors, cycles):
         for i, warrior in enumerate(warriors):
             self._print_warrior_name(i, warrior)
             self._print_warrior_details(i, warrior)
+            self._print_cycles(cycles)
 
         pygame.display.update()
 
