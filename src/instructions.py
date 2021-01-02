@@ -17,7 +17,7 @@ class Instruction(ABC):
         :param b_mode: String b_mode; for example "#"
         :param b_value: String b_value; for example "-1"
         """
-        self._modifier = Modifier(modifier.upper()) if modifier else Modifier.AB
+        self._modifier = Modifier(modifier.upper()) if modifier else get_default_modifier(type(self))
         self._a_mode = Mode(a_mode.upper()) if a_mode else Mode.DIRECT
         self._a_value = int(a_value) if a_value else 0
         self._b_mode = Mode(b_mode.upper()) if b_mode else Mode.DIRECT
@@ -199,7 +199,8 @@ class ArithmeticInstruction(Instruction):
             # Kill warrior process
             pass
 
-    def get_operator(self):
+    @staticmethod
+    def get_operator():
         # Implemented in extending classes
         return ArithmeticOperator.ADD  # Set default to fix linter errors
 
@@ -397,3 +398,29 @@ class NOP(Instruction):
 
     def instruction(self, a, b, a_pointer, b_pointer, position, core, warrior):
         warrior.add_process(position + 1)
+
+
+def get_default_modifier(instruction_class):
+    """
+    :param instruction_class: Instruction class
+    :return: Default Modifier for instruction_class
+    """
+    default_modifiers = {
+        DAT: Modifier.F,
+        MOV: Modifier.I,
+        ADD: Modifier.AB,
+        SUB: Modifier.AB,
+        MUL: Modifier.AB,
+        DIV: Modifier.AB,
+        MOD: Modifier.AB,
+        JMP: Modifier.B,
+        JMZ: Modifier.B,
+        JMN: Modifier.B,
+        DJN: Modifier.B,
+        SEQ: Modifier.I,
+        SNE: Modifier.I,
+        SLT: Modifier.B,
+        SPL: Modifier.B,
+        NOP: Modifier.F
+    }
+    return default_modifiers[instruction_class] if instruction_class in default_modifiers else Modifier.AB

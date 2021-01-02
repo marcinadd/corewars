@@ -1,7 +1,8 @@
 from src.core import Core
 from src.enum.mode import Mode
 from src.enum.modifier import Modifier
-from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN, DJN, SEQ, DIV, MOD
+from src.instructions import DAT, MOV, ADD, JMP, SUB, SPL, JMZ, JMN, DJN, SEQ, DIV, MOD, SLT
+from src.instructions import get_default_modifier
 from src.round import Round
 from src.warrior import Warrior
 
@@ -520,3 +521,8 @@ def test_mod_zero():
     game = Round(core=core, warriors=[warrior], init_warriors=False)
     game.simulation_step()
     assert len(warrior.processes()) == 0
+
+
+def test_get_default_modifier():
+    assert get_default_modifier(DAT) == Modifier.F
+    assert get_default_modifier(SLT) == Modifier.B
