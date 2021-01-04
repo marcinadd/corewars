@@ -15,7 +15,7 @@ def divide_blocks(core_size):
     return BLOCKS_X, math.ceil(core_size // BLOCKS_X)
 
 
-class GUI:
+class GUI(ABC):
     def __init__(self, width, height, core_size):
         """
         GUI constructor
@@ -60,7 +60,6 @@ class GUI:
         """
         pass
 
-    @abstractmethod
     def set_block_color(self, block_number, color, event):
         """
         Set block with color with style depending on event
@@ -142,7 +141,7 @@ class GUI:
         pass
 
 
-class PyGameGUI(GUI, ABC):
+class PyGameGUI(GUI):
     def __init__(self, width, height, core_size, ticks=250, block_size=10):
         super().__init__(width, height, core_size)
         pygame.init()
@@ -266,3 +265,38 @@ class PyGameGUI(GUI, ABC):
 
     def close(self):
         pygame.quit()
+
+
+class MockGUI(GUI):
+    def __init__(self, core_size):
+        super().__init__(0, 0, core_size)
+
+    def _init_core_view(self):
+        pass
+
+    def _init_info_view(self):
+        pass
+
+    def _set_block_read(self, block_number, color):
+        pass
+
+    def _set_block_written(self, block_number, color):
+        pass
+
+    def _set_block_executed(self, block_number, color):
+        pass
+
+    def print_round_text(self, round_num):
+        pass
+
+    def print_game_info(self, warriors, cycles):
+        pass
+
+    def clock_tick(self):
+        pass
+
+    def handle_events(self):
+        pass
+
+    def close(self):
+        pass

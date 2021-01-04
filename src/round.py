@@ -3,6 +3,7 @@ from random import randrange, sample
 
 from src.core import Core
 from src.enum.event import CoreEvent
+from src.gui.gui import MockGUI
 
 
 class Round:
@@ -19,6 +20,8 @@ class Round:
         if gui:
             self._gui = gui
             self._gui.init_game_screen()
+        else:
+            self._gui = MockGUI(core_size)
         if init_warriors:
             self.init_warriors()
         self._number = number
