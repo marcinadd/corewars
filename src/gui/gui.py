@@ -73,6 +73,10 @@ class GUI:
         pass
 
     @abstractmethod
+    def handle_events(self):
+        pass
+
+    @abstractmethod
     def close(self):
         pass
 
@@ -192,6 +196,12 @@ class PyGameGUI(GUI, ABC):
             self._print_cycles(cycles)
 
         pygame.display.update()
+
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                print("Simulation aborted!")
+                pygame.quit()
 
     def close(self):
         pygame.quit()

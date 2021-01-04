@@ -107,7 +107,8 @@ class Round:
         # Play game
         while not self.is_ended():
             self.simulation_step()
-            self._gui.clock_tick()
             self._gui.print_game_info(self._warriors, self._cycles)
+            self._gui.handle_events()
+            self._gui.clock_tick()
         # Update results
         self.update_warriors_results()
