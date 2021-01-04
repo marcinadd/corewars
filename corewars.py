@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import sys
 
@@ -14,7 +15,7 @@ def parse_args(args):
     parser.add_argument('warriors', nargs='*')
     parser.add_argument('--rounds', nargs='?', default=10)
     parser.add_argument('--core-size', nargs='?', default=8000)
-    parser.add_argument('--max-cycles', nargs='?', default=800000)
+    parser.add_argument('--max-cycles', nargs='?', default=80000)
     parser.add_argument('--no-gui', action='store_true')
     return parser.parse_args(args[1:])
 
