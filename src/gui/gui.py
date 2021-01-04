@@ -17,30 +17,57 @@ def divide_blocks(core_size):
 
 class GUI:
     def __init__(self, width, height, core_size):
+        """
+        GUI constructor
+        :param width: Screen width
+        :param height: Screen height
+        :param core_size: Core size
+        """
         self._width = width
         self._height = height
         self._blocks_x, self._blocks_y = divide_blocks(core_size)
         self._core_size = core_size
 
     def get_block_position(self, block_number):
-        y = block_number // self._blocks_x
-        x = block_number % self._blocks_x
-        return x, y
+        """
+        Get block in core position
+        :param block_number: Block number to get position
+        :return: A tuple with block position (column,row)
+        """
+        row = block_number // self._blocks_x
+        column = block_number % self._blocks_x
+        return column, row
 
     def init_game_screen(self):
+        """
+        Init game screen: clear core and render game info
+        :return:
+        """
         self._init_core_view()
         self._init_info_view()
 
     @abstractmethod
     def _init_core_view(self):
+        """
+        Print empty core blocks
+        """
         pass
 
     @abstractmethod
     def _init_info_view(self):
+        """
+        Print info block
+        """
         pass
 
     @abstractmethod
     def set_block_color(self, block_number, color, event):
+        """
+        Set block with color with style depending on event
+        :param block_number: Block to change color
+        :param color: New color
+        :param event: Event type
+        """
         events_method = {
             CoreEvent.READ: self._set_block_read,
             CoreEvent.WRITE: self._set_block_written,
@@ -50,34 +77,68 @@ class GUI:
 
     @abstractmethod
     def _set_block_read(self, block_number, color):
+        """
+        Set block as read
+        :param block_number: Block to set
+        :param color: New color
+        """
         pass
 
     @abstractmethod
     def _set_block_written(self, block_number, color):
+        """
+        Set block as written
+        :param block_number: Block to set
+        :param color: New color
+        """
         pass
 
     @abstractmethod
     def _set_block_executed(self, block_number, color):
+        """
+        Set block as executed
+        :param block_number: Block to set
+        :param color: New color
+        """
         pass
 
     @abstractmethod
     def print_round_text(self, round_num):
+        """
+        Print text with Round
+        :param round_num:
+        :return:
+        """
         pass
 
     @abstractmethod
     def print_game_info(self, warriors, cycles):
+        """
+        Print current game status
+        :param warriors: All warriors
+        :param cycles:  Current round cycles
+        """
         pass
 
     @abstractmethod
     def clock_tick(self):
+        """
+        Control game speed depending on GUI implementation
+        """
         pass
 
     @abstractmethod
     def handle_events(self):
+        """
+        Handle gui events such a window closed, window resized etc.
+        """
         pass
 
     @abstractmethod
     def close(self):
+        """
+        Handle GUI close
+        """
         pass
 
 
