@@ -1,4 +1,5 @@
 import glob
+import os
 
 from src.parser import parse_warrior
 
@@ -28,8 +29,8 @@ def get_warrior_list(warrior_files):
         paths = get_warrior_files()
     warriors = []
     for path in paths:
-        with open(path, 'r') as file_handle:
-            warrior = parse_warrior(file_handle)
-            warriors.append(warrior)
-
+        if os.path.isfile(path):
+            with open(path, 'r') as file_handle:
+                warrior = parse_warrior(file_handle)
+                warriors.append(warrior)
     return warriors

@@ -13,9 +13,9 @@ SCREEN_Y = 800
 def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('warriors', nargs='*')
-    parser.add_argument('--rounds', nargs='?', default=10)
-    parser.add_argument('--core-size', nargs='?', default=8000)
-    parser.add_argument('--max-cycles', nargs='?', default=80000)
+    parser.add_argument('--rounds', nargs='?', default=10, type=int)
+    parser.add_argument('--core-size', nargs='?', default=8000, type=int)
+    parser.add_argument('--max-cycles', nargs='?', default=80000, type=int)
     parser.add_argument('--no-gui', action='store_true')
     return parser.parse_args(args[1:])
 

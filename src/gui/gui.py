@@ -5,7 +5,6 @@ import pygame
 
 from src.enum.event import CoreEvent
 from src.gui.colors import Color
-from src.gui.strings import STRINGS
 
 BLOCKS_X = 100
 FONT_LOCATION = "font/font.ttf"
@@ -161,11 +160,11 @@ class PyGameGUI(GUI):
         pygame.draw.rect(self._screen, border_color, back)
         pygame.draw.rect(self._screen, color, front)
 
-    def _draw_circle_with_border(self, x, y, width, height, color, border=1, border_color=(0, 0, 0)):
+    def _draw_circle_with_border(self, x, y, width, height, color):
         self._draw_rect_with_border(x, y, width, height, Color.GRAY.value)
         pygame.draw.circle(self._screen, color, (x + 4, y + 4), 3)
 
-    def _draw_x(self, x, y, width, height, color, border=1, border_color=(0, 0, 0)):
+    def _draw_x(self, x, y, width, height, color, border=1):
         self._draw_rect_with_border(x, y, width, height, Color.GRAY.value)
         pygame.draw.line(self._screen, color, (x + border, y + border),
                          (x + self._block_size - border, y + self._block_size - border), width=3)
@@ -206,7 +205,7 @@ class PyGameGUI(GUI):
         return (self._width - info_block_start_position) // 2
 
     def print_round_text(self, round_num):
-        text = f'{STRINGS["ROUND"]} {round_num}'
+        text = f'ROUND {round_num}'
         offset_x = self._get_info_x_center()
         offset_y = 20
         self._print_standard_info_text(text, 20, offset_x, offset_y, center=True)

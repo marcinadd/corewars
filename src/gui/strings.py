@@ -1,3 +1,0 @@
-STRINGS = {
-    "ROUND": "ROUND"
-}
