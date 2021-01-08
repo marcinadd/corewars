@@ -1,9 +1,8 @@
 import glob
 import os
 
+from src.config import DEFAULT_WARRIORS_DIRECTORY
 from src.parser import parse_warrior
-
-DEFAULT_WARRIORS_DIRECTORY = "warriors/"
 
 
 def get_warrior_files(directory=DEFAULT_WARRIORS_DIRECTORY):

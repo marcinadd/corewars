@@ -2,12 +2,10 @@
 import argparse
 import sys
 
+from src.config import SCREEN_X, SCREEN_Y
 from src.file import get_warrior_list
 from src.game import Game
 from src.gui.gui import PyGameGUI, MockGUI
-
-SCREEN_X = 1200
-SCREEN_Y = 800
 
 
 def parse_args(args):

@@ -85,7 +85,7 @@ def parse_warrior(file_handle):
         line = line.strip()
         if line:
             if line.startswith(';'):
-                # It is comment
+                # It is a comment
                 # Try to parse it as name comment
                 parsed_name = try_parse_name(line)
                 if parsed_name:

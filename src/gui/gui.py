@@ -3,11 +3,9 @@ from abc import abstractmethod, ABC
 
 import pygame
 
+from src.config import BLOCKS_X, FONT_LOCATION, CLOCK_TICKS, BLOCK_SIZE, WINDOW_TITLE
 from src.enum.event import CoreEvent
 from src.gui.colors import Color
-
-BLOCKS_X = 100
-FONT_LOCATION = "font/font.ttf"
 
 
 def divide_blocks(core_size):
@@ -141,18 +139,16 @@ class GUI(ABC):
 
 
 class PyGameGUI(GUI):
-    def __init__(self, width, height, core_size, ticks=250, block_size=10):
+    def __init__(self, width, height, core_size):
         super().__init__(width, height, core_size)
         pygame.init()
+        pygame.display.set_caption(WINDOW_TITLE)
         self._screen = pygame.display.set_mode((width, height))
         self._clock = pygame.time.Clock()
         self._screen.fill(Color.BACKGROUND.value)
-        self._ticks = ticks
-        self._block_size = block_size
-        self._width = width
 
     def clock_tick(self):
-        self._clock.tick(self._ticks)
+        self._clock.tick(CLOCK_TICKS)
 
     def _draw_rect_with_border(self, x, y, width, height, color, border=1, border_color=(0, 0, 0)):
         back = pygame.Rect(x, y, width, height)
@@ -167,27 +163,27 @@ class PyGameGUI(GUI):
     def _draw_x(self, x, y, width, height, color, border=1):
         self._draw_rect_with_border(x, y, width, height, Color.GRAY.value)
         pygame.draw.line(self._screen, color, (x + border, y + border),
-                         (x + self._block_size - border, y + self._block_size - border), width=3)
-        pygame.draw.line(self._screen, color, (x + self._block_size - border, y + border),
-                         (x + border, y + self._block_size - border), width=3)
+                         (x + BLOCK_SIZE - border, y + BLOCK_SIZE - border), width=3)
+        pygame.draw.line(self._screen, color, (x + BLOCK_SIZE - border, y + border),
+                         (x + border, y + BLOCK_SIZE - border), width=3)
 
     def _get_position_in_pixels(self, block_number):
         x, y = self.get_block_position(block_number)
-        x *= self._block_size
-        y *= self._block_size
+        x *= BLOCK_SIZE
+        y *= BLOCK_SIZE
         return x, y
 
     def _set_block_read(self, block_number, color):
         x, y = self._get_position_in_pixels(block_number)
-        # self._draw_circle_with_border(x, y, self._block_size, self._block_size, color)
+        # self._draw_circle_with_border(x, y, BLOCK_SIZE, BLOCK_SIZE, color)
 
     def _set_block_written(self, block_number, color):
         x, y = self._get_position_in_pixels(block_number)
-        self._draw_x(x, y, self._block_size, self._block_size, color)
+        self._draw_x(x, y, BLOCK_SIZE, BLOCK_SIZE, color)
 
     def _set_block_executed(self, block_number, color):
         x, y = self._get_position_in_pixels(block_number)
-        self._draw_rect_with_border(x, y, self._block_size, self._block_size, color)
+        self._draw_rect_with_border(x, y, BLOCK_SIZE, BLOCK_SIZE, color)
 
     def _init_core_view(self):
         for i in range(self._core_size):
@@ -198,7 +194,7 @@ class PyGameGUI(GUI):
         pass
 
     def _get_start_info_position(self):
-        return BLOCKS_X * self._block_size
+        return BLOCKS_X * BLOCK_SIZE
 
     def _get_info_x_center(self):
         info_block_start_position = self._get_start_info_position()

@@ -1,6 +1,5 @@
+from src.config import WARRIOR_DEFAULT_NAME
 from src.gui.colors import Color
-
-WARRIOR_DEFAULT_NAME = "Warrior"
 
 
 class Warrior:
@@ -44,9 +43,6 @@ class WarriorInfo:
     """
 
     def __init__(self, name):
-        """
-        :param name:
-        """
         self._name = name
         self._wins = 0
         self._ties = 0
