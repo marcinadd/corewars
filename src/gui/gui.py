@@ -158,7 +158,7 @@ class PyGameGUI(GUI):
 
     def _draw_circle_with_border(self, x, y, width, height, color):
         self._draw_rect_with_border(x, y, width, height, Color.GRAY.value)
-        pygame.draw.circle(self._screen, color, (x + 4, y + 4), 3)
+        pygame.draw.circle(self._screen, color, (x + BLOCK_SIZE // 2, y + BLOCK_SIZE // 2), 3)
 
     def _draw_x(self, x, y, width, height, color, border=1):
         self._draw_rect_with_border(x, y, width, height, Color.GRAY.value)
@@ -175,7 +175,7 @@ class PyGameGUI(GUI):
 
     def _set_block_read(self, block_number, color):
         x, y = self._get_position_in_pixels(block_number)
-        # self._draw_circle_with_border(x, y, BLOCK_SIZE, BLOCK_SIZE, color)
+        self._draw_circle_with_border(x, y, BLOCK_SIZE, BLOCK_SIZE, color)
 
     def _set_block_written(self, block_number, color):
         x, y = self._get_position_in_pixels(block_number)
@@ -193,7 +193,8 @@ class PyGameGUI(GUI):
     def _init_info_view(self):
         pass
 
-    def _get_start_info_position(self):
+    @staticmethod
+    def _get_start_info_position():
         return BLOCKS_X * BLOCK_SIZE
 
     def _get_info_x_center(self):
@@ -255,6 +256,7 @@ class PyGameGUI(GUI):
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                # Abort simulation and close window on close button pressed
                 print("Simulation aborted!")
                 pygame.quit()
 

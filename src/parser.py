@@ -49,23 +49,27 @@ def parse_instruction(line, line_number=1):
     :param line_number: Line number for error reporting
     :return: A class which extends Instruction abstract class
     """
+
     match = re.search(INSTRUCTION_PATTERN, line.upper())
     if not match:
+        # Regex doesn't match; it isn't an instruction at all
         raise InvalidInstructionSyntaxException(line, line_number)
     groups = list(match.groups())
     instruction_code = groups[0]
     instruction_values = groups[1:]
     if instruction_code in INSTRUCTION_CODES:
+        # It is a valid instruction; create corresponding instruction class
         instruction_class = INSTRUCTION_CODES[instruction_code]
         instruction = instruction_class(*instruction_values)
         return instruction
     else:
+        # It is instruction but with invalid instruction code
         raise InvalidInstructionCodeException(instruction_code)
 
 
 def try_parse_name(line):
     """
-    Checks if line contains warrior name and parses it
+    Check if line contains warrior name and parses it
     :param line: Line string
     :return: Warrior name or None
     """

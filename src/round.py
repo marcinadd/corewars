@@ -39,7 +39,7 @@ class Round:
 
     def _init_warrior(self, warrior, starting_core_address):
         """
-        Loads warrior into core
+        Load a warrior into the core
         :param warrior: Warrior to be loaded
         :param starting_core_address: Core address where first instruction will be loaded
         """
@@ -52,7 +52,7 @@ class Round:
 
     def init_warriors(self):
         """
-        Iterates all warriors and loads them into core
+        Iterate all warriors and load them into the core
         """
         core_size = self._core.size()
         start_position = randrange(core_size)
@@ -63,7 +63,10 @@ class Round:
             self._init_warrior(warrior, start_position + i * space_between_warriors)
 
     def is_ended(self):
-        # TODO Support testing warriors with only one warrior in core
+        """
+        Check if the round is ended
+        :return: True or False
+        """
         return len(self.get_alive_warriors()) <= 1 or self._cycles > self._max_cycles
 
     def get_alive_warriors(self):
@@ -75,7 +78,7 @@ class Round:
 
     def update_warriors_results(self):
         """
-        Update alive warrior results after round ended
+        Update alive warrior results after the round ended
         """
         alive_warriors = self.get_alive_warriors()
         if len(alive_warriors) == 1:
@@ -90,7 +93,7 @@ class Round:
 
     def simulation_step(self):
         """
-        Iterates all warriors and execute one queued instruction for each warrior
+        Iterate all warriors and execute one queued instruction for each warrior
         """
         for warrior in self._warriors:
             if warrior.processes():
@@ -104,7 +107,7 @@ class Round:
 
     def play(self):
         """
-        Executes simulation step and updates gui until round is not ended
+        Execute the simulation step and update GUI until the round is not ended
         """
         self._gui.print_round_text(self._number)
         # Play game

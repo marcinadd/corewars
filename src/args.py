@@ -2,6 +2,10 @@ import argparse
 
 
 class IntBetween:
+    """
+    Custom type to check if given argument is int and is in given range (inclusive)
+    """
+
     def __init__(self, minim, maxim):
         self._minim = minim
         self._maxim = maxim
