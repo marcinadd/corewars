@@ -3,6 +3,7 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"  # Hide pygame welcome message
 
 DEFAULT_WARRIORS_DIRECTORY = "warriors/"
+DEFAULT_WARRIOR_COUNT = 3
 WARRIOR_DEFAULT_NAME = "Warrior"
 
 # GUI

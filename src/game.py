@@ -41,8 +41,8 @@ class Game:
         Get strings with results after finished game
         :return: Formatted string with warrior results
         """
-        text = f'****Won-Tied-Lost****\n'
+        text = f'****Won-Lost-Tied after {self._rounds} round/s****\n'
         for warrior in self._warriors:
             info = warrior.warrior_info()
-            text += f'{info.name()}: {info.wins()}-{info.ties()}-{info.loses()}\n'
+            text += f'{info.name()}: {info.wins()}-{info.loses()}-{info.ties()}\n'
         return text

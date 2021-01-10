@@ -2,7 +2,7 @@ from argparse import ArgumentTypeError
 
 import pytest
 
-from src.intbetween import IntBetween
+from src.args import IntBetween
 
 
 def test_int_between_ok():

@@ -1,7 +1,8 @@
 import glob
 import os
+import random
 
-from src.config import DEFAULT_WARRIORS_DIRECTORY
+from src.config import DEFAULT_WARRIORS_DIRECTORY, DEFAULT_WARRIOR_COUNT
 from src.parser import parse_warrior
 
 
@@ -24,8 +25,10 @@ def get_warrior_list(warrior_files):
         # Load warriors from specified files
         paths = warrior_files
     else:
-        # Load warriors from default directory
-        paths = get_warrior_files()
+        # Load random warriors from default directory
+        warrior_files = get_warrior_files()
+        paths = random.sample(warrior_files, DEFAULT_WARRIOR_COUNT)
+
     warriors = []
     for path in paths:
         if os.path.isfile(path):
