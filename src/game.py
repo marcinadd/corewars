@@ -15,8 +15,8 @@ class Game:
         self._warriors = warriors
         self._rounds = rounds
         self._max_cycles = max_cycles
+        self._gui = gui
         if gui:
-            self._gui = gui
             self._gui.init_game_screen()
             self._set_warriors_colors()
 

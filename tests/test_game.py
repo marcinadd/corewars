@@ -1,16 +1,17 @@
-from src.round import Round
+from src.game import Game
+from src.instructions import MOV
 from src.warrior import Warrior
 
 
-def test_has_alive_warriors_true():
-    warrior_a = Warrior(processes=[])
-    warrior_b = Warrior(processes=[1])
-    game = Round([warrior_a, warrior_b], core_size=2)
-    assert game.get_alive_warriors()
+def test_play_game_ok():
+    warrior_a = Warrior([MOV("I", "#", 1, "}", 0)])
+    warrior_b = Warrior([MOV("I", "#", 1, "}", 0)])
+    game = Game([warrior_a, warrior_b], max_cycles=20)
+    game.play()
 
 
-def test_has_alive_warriors_false():
-    warrior_a = Warrior(processes=[])
-    warrior_b = Warrior(processes=[])
-    game = Round([warrior_a, warrior_b], core_size=2)
-    assert game.get_alive_warriors()
+def test_game_results():
+    warrior_a = Warrior([MOV("I", "#", 1, "}", 0)])
+    warrior_b = Warrior([MOV("I", "#", 1, "}", 0)])
+    game = Game([warrior_a, warrior_b], max_cycles=20)
+    game.get_results_string()
