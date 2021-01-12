@@ -157,11 +157,11 @@ class PyGameGUI(GUI):
         pygame.draw.rect(self._screen, color, front)
 
     def _draw_circle_with_border(self, x, y, width, height, color):
-        self._draw_rect_with_border(x, y, width, height, Color.GRAY.value)
+        self._draw_rect_with_border(x, y, width, height, Color.CORE_DEFAULT.value)
         pygame.draw.circle(self._screen, color, (x + BLOCK_SIZE // 2, y + BLOCK_SIZE // 2), 3)
 
     def _draw_x(self, x, y, width, height, color, border=1):
-        self._draw_rect_with_border(x, y, width, height, Color.GRAY.value)
+        self._draw_rect_with_border(x, y, width, height, Color.CORE_DEFAULT.value)
         pygame.draw.line(self._screen, color, (x + border, y + border),
                          (x + BLOCK_SIZE - border, y + BLOCK_SIZE - border), width=3)
         pygame.draw.line(self._screen, color, (x + BLOCK_SIZE - border, y + border),
@@ -187,7 +187,7 @@ class PyGameGUI(GUI):
 
     def _init_core_view(self):
         for i in range(self._core_size):
-            self.set_block_color(i, Color.GRAY.value, CoreEvent.EXECUTE)
+            self.set_block_color(i, Color.CORE_DEFAULT.value, CoreEvent.EXECUTE)
         pygame.display.flip()
 
     def _init_info_view(self):
